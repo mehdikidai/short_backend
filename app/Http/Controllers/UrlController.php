@@ -6,6 +6,7 @@ use App\Models\Url;
 use App\Http\Requests\StoreUrlRequest;
 use App\Http\Requests\UpdateUrlRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class UrlController extends Controller
 {
@@ -24,23 +25,31 @@ class UrlController extends Controller
         $urls = Url::where('user_id', $user->id)->paginate(5);
 
         return response()->json($urls);
-
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreUrlRequest $request)
+    public function store(Request $request)
     {
-        //
+        
+        $data = $request->validate([
+            'original_url' => 'required|url',
+            'title' => 'required|regex:/(^([a-zA-z0-9]{3,20})$)/'
+        ]);
+
+
+        do {
+            $data['code'] = Str::random(6);
+        } while (Url::where('code', $data['code'])->exists());
+
+
+        $data['user_id'] = $request->user()->id;
+
+        Url::create($data);
+
+        return response()->json($data,201);
+        
     }
 
     /**

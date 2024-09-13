@@ -21,8 +21,8 @@ class UrlFactory extends Factory
         return [
             'user_id' => User::all()->random()->id,
             'original_url' => fake()->url(),
-            'short_url' => fake()->url(),
-            'custom_alias' => Str::random(6),
+            'code' => Str::random(6),
+            'title' => fake()->words(rand(2, 3), true)
         ];
     }
 }

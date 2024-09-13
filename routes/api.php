@@ -21,5 +21,7 @@ Route::controller(AuthController::class)->group(function () {
 Route::controller(UrlController::class)->group(function () {
 
     Route::get('/urls', 'index')->middleware('auth:sanctum');
+
+    Route::post('/urls', 'store')->middleware('auth:sanctum');
     
 });
