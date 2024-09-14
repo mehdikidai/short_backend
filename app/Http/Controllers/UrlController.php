@@ -32,10 +32,10 @@ class UrlController extends Controller
      */
     public function store(Request $request)
     {
-        
+
         $data = $request->validate([
             'original_url' => 'required|url',
-            'title' => 'required|regex:/(^([a-zA-z0-9]{3,20})$)/'
+            'title' => 'required|regex:/(^[A-Za-z][\w\s]{1,20}[A-Za-z]$)/'
         ]);
 
 
@@ -48,16 +48,18 @@ class UrlController extends Controller
 
         Url::create($data);
 
-        return response()->json($data,201);
-        
+        return response()->json($data, 201);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Url $url)
+    public function show(Request $request, $id)
     {
-        //
+        $url = Url::findOrFail($id);
+
+        return response()->json($url);
+
     }
 
     /**
