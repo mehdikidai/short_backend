@@ -7,6 +7,7 @@ use App\Http\Requests\StoreUrlRequest;
 use App\Http\Requests\UpdateUrlRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Gate;
 
 class UrlController extends Controller
 {
@@ -18,11 +19,25 @@ class UrlController extends Controller
 
         $user =  auth('sanctum')->user();
 
+        $sortOrder = $request->query('sort_order', 'desc');
+
+
+        //dd($q);
+
         if (!$user) {
+
             return response()->json(['message' => 'Unauthorized'], 401);
         }
 
-        $urls = Url::where('user_id', $user->id)->paginate(5);
+        $urls = Url::where('user_id', $user->id)->orderBy('created_at', $sortOrder)->paginate(6);
+
+
+        $urls->getCollection()->transform(function ($url) use ($request) {
+            $url->url_server = $request->root();
+            $url->domain = preg_replace('/^https?:\/\//', '', $request->root());
+            return $url;
+        });
+
 
         return response()->json($urls);
     }
@@ -54,12 +69,14 @@ class UrlController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Request $request, $id)
+    public function show($id)
     {
+
         $url = Url::findOrFail($id);
 
-        return response()->json($url);
+        Gate::authorize('view-url', $url);
 
+        return response()->json($url);
     }
 
     /**
@@ -73,16 +90,38 @@ class UrlController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateUrlRequest $request, Url $url)
+    public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'original_url' => 'required|url',
+            'title' => 'required|regex:/(^[A-Za-z][\w\s]{1,20}[A-Za-z]$)/',
+            'code' => 'required|regex:/(^[A-Za-z0-9]{3,8}$)/|unique:urls,code,' . $id
+        ]);
+
+        $url = Url::findOrFail($id);
+
+        Gate::authorize('update-url', $url);
+
+        $url->original_url = $request->input('original_url');
+        $url->title = $request->input('title');
+        $url->code = $request->input('code');
+
+        $data = $url->save();
+
+        return response()->json($data);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Url $url)
+    public function destroy($id)
     {
-        //
+        $url = Url::findOrFail($id);
+
+        Gate::authorize('delet-url', $url);
+
+        $res = $url->delete();
+
+        return response()->json(['message' => $res]);
     }
 }

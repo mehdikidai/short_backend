@@ -18,12 +18,16 @@ Route::controller(AuthController::class)->group(function () {
     Route::post('/logout', 'logout')->middleware('auth:sanctum');
 });
 
-Route::controller(UrlController::class)->prefix('urls')->group(function () {
+Route::controller(UrlController::class)->group(function () {
 
-    Route::get('/', 'index');
+    Route::get('/urls', 'index')->middleware('auth:sanctum');
 
-    Route::post('/', 'store');
+    Route::post('/urls', 'store')->middleware('auth:sanctum');
 
-    Route::get('/{id}', 'show');
+    Route::get('/urls/{id}', 'show')->middleware('auth:sanctum');
+
+    Route::put('/urls/{id}', 'update')->middleware('auth:sanctum');
+
+    Route::delete('/urls/{id}', 'destroy')->middleware('auth:sanctum');
     
-})->middleware('auth:sanctum');
+});
