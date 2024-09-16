@@ -1,14 +1,15 @@
 <?php
 
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\UrlController;
-use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UrlController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\SearchController;
+
 
 Route::get('/user', [UserController::class, 'user'])->middleware('auth:sanctum');
 
 Route::post('/register', [UserController::class, 'store']);
-
 
 
 Route::controller(AuthController::class)->group(function () {
@@ -18,16 +19,20 @@ Route::controller(AuthController::class)->group(function () {
     Route::post('/logout', 'logout')->middleware('auth:sanctum');
 });
 
-Route::controller(UrlController::class)->group(function () {
+Route::middleware('auth:sanctum')->group(function () {
 
-    Route::get('/urls', 'index')->middleware('auth:sanctum');
+    Route::controller(UrlController::class)->group(function () {
 
-    Route::post('/urls', 'store')->middleware('auth:sanctum');
+        Route::get('/urls', 'index');
 
-    Route::get('/urls/{id}', 'show')->middleware('auth:sanctum');
+        Route::post('/urls', 'store');
 
-    Route::put('/urls/{id}', 'update')->middleware('auth:sanctum');
+        Route::get('/urls/{id}', 'show');
 
-    Route::delete('/urls/{id}', 'destroy')->middleware('auth:sanctum');
-    
+        Route::put('/urls/{id}', 'update');
+
+        Route::delete('/urls/{id}', 'destroy');
+    });
+
+    Route::get('/search', SearchController::class);
 });
