@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Url;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class SearchController extends Controller
 {
@@ -22,6 +24,10 @@ class SearchController extends Controller
             ->latest()
             ->limit(6)
             ->get();
+
+            
+
+        Log::info('hi mehdi'.Str::random(10));
 
 
         return response()->json($results);

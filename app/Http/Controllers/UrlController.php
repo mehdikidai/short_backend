@@ -11,6 +11,10 @@ use Illuminate\Support\Facades\Gate;
 
 class UrlController extends Controller
 {
+
+
+    private $sortBy = ['desc', 'asc'];
+
     /**
      * Display a listing of the resource.
      */
@@ -22,7 +26,12 @@ class UrlController extends Controller
         $sortOrder = $request->query('sort_order', 'desc');
 
 
-        //dd($q);
+        if (!in_array($sortOrder, $this->sortBy)) {
+
+            return abort(404);
+
+        }
+        
 
         if (!$user) {
 
