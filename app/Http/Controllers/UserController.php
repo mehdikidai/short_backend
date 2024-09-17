@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\SendEmailJob;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -34,6 +35,8 @@ class UserController extends Controller
         ]);
 
         $token = $user->createToken($user->name . '-AuthToken')->plainTextToken;
+
+        SendEmailJob::dispatch($data['email']);
 
         return response()->json(['token' => $token, 'user' => $user], 201);
     }

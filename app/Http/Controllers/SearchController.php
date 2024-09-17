@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\SocketEmit;
 use App\Models\Url;
-use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
+
 
 class SearchController extends Controller
 {
@@ -19,15 +19,16 @@ class SearchController extends Controller
         $results = Url::where('user_id', $userId)
             ->where(function ($q) use ($query) {
                 $q->where('title', 'like', '%' . $query . '%')
-                    ->orWhere('code', 'like', '%' . $query . '%');
+                    ->orWhere('code', 'like', '%' . $query . '%')
+                    ->orWhere('original_url', 'like', '%' . $query . '%');
             })
             ->latest()
             ->limit(6)
-            ->get();
+            ->get(['id','title']);
 
-            
 
-        Log::info('hi mehdi'.Str::random(10));
+        SocketEmit::dispatch($userId);
+
 
 
         return response()->json($results);
