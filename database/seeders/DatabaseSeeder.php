@@ -20,7 +20,8 @@ class DatabaseSeeder extends Seeder
         User::factory()->create([
             'name' => 'mehdi kidai',
             'email' => 'mehdikidai@gmail.com',
-            'password' => Hash::make('12345678')
+            'password' => Hash::make('12345678'),
+            'verification_code' => mt_rand(100000, 999999)
         ]);
 
         Url::factory(10)->create();

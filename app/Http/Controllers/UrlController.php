@@ -13,7 +13,7 @@ class UrlController extends Controller
 {
 
 
-    private $sortBy = ['desc', 'asc'];
+    public $sortBy = ['desc', 'asc'];
 
     /**
      * Display a listing of the resource.

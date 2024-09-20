@@ -2,13 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Jobs\SendEmailJob;
 use App\Models\User;
+use App\Jobs\SendEmailJob;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Cache;
+use App\Traits\CodeVerification;
 
 class UserController extends Controller
 {
+
+
+    use CodeVerification;
+
     /**
      * Display a listing of the resource.
      */
@@ -28,15 +34,18 @@ class UserController extends Controller
             'name' => 'required|min:3|max:20'
         ]);
 
+        $v_code = $this->make_verification_code();
+
         $user = User::create([
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
-            'name' => $data['name']
+            'name' => $data['name'],
+            'verification_code' => $v_code
         ]);
 
         $token = $user->createToken($user->name . '-AuthToken')->plainTextToken;
 
-        SendEmailJob::dispatch($data['email']);
+        SendEmailJob::dispatch($data['email'], $v_code, $data['name']);
 
         return response()->json(['token' => $token, 'user' => $user], 201);
     }
@@ -52,9 +61,30 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request)
     {
-        //
+
+        $user  = $request->user();
+
+        $data = $request->validate([
+            'name' => 'required|min:3|max:20',
+            'email' => 'required|email|unique:users,email,' . $user->id
+        ]);
+
+
+        if ($user->email !== $data['email']) {
+
+            $v_code = $this->make_verification_code();
+            $user->email_verified_at = null;
+            $user->verification_code = $v_code;
+            SendEmailJob::dispatch($data['email'], $v_code, $data['name']);
+        }
+
+        $user->update($data);
+
+        Cache::forget('user_' . $user->id);
+
+        return response()->json($user);
     }
 
     /**
@@ -67,6 +97,56 @@ class UserController extends Controller
 
     public function user(Request $request)
     {
-        return response()->json($request->user());
+
+        $userId = $request->user()->id;
+
+        $user = Cache::remember('user_' . $userId, 60 * 5, function () use ($request) {
+
+            return $request->user();
+        });
+
+
+        return response()->json($user);
+    }
+
+
+    public function upload_photo_user(Request $request)
+    {
+
+        $user = $request->user();
+
+        $request->validate([
+            'photo' => 'required|image'
+        ]);
+
+        $photo = $request->file('photo');
+
+        $photoName = time() . '.' . $photo->getClientOriginalExtension();
+
+
+
+        if ($user->photo) {
+
+            $oldPhotoPath = public_path(parse_url($user->photo, PHP_URL_PATH));
+
+            if (file_exists($oldPhotoPath)) {
+                unlink($oldPhotoPath);
+            }
+            
+        }
+
+
+        $photo->move(public_path('photos'), $photoName);
+
+        $photoPath = url('photos/' . $photoName);
+
+
+
+        $user->photo = $photoPath;
+
+        $user->save();
+
+
+        return response()->json(['message' => 'Image uploaded successfully', 'photo' => $photoName]);
     }
 }
