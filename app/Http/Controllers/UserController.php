@@ -40,7 +40,7 @@ class UserController extends Controller
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
             'name' => $data['name'],
-            'verification_code' => $v_code
+            'verification_code' => $v_code,
         ]);
 
         $token = $user->createToken($user->name . '-AuthToken')->plainTextToken;
@@ -108,6 +108,4 @@ class UserController extends Controller
 
         return response()->json($user);
     }
-
-
 }

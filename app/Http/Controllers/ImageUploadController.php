@@ -2,19 +2,29 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ImageProfileRequest;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Cache;
 
+
 class ImageUploadController extends Controller
 {
-    public function upload(Request $request)
+
+    public $key_tinify;
+
+    public function __construct()
     {
 
-        $request->validate([
-            'photo' => 'required|image|mimes:jpg,jpeg,png|max:2048',
-        ]);
+        $this->key_tinify = config('services.tinify.key');
+    }
+
+    public function upload(ImageProfileRequest $request)
+    {
+
+        $request->validated();
 
         $user = $request->user();
 
@@ -33,7 +43,33 @@ class ImageUploadController extends Controller
 
         $photoName = Str::random(20) . time() . '.' . $photo->getClientOriginalExtension();
 
-        $photo->move(public_path('photos'), $photoName);
+
+        try {
+
+            \Tinify\setKey($this->key_tinify);
+
+            $source = \Tinify\fromFile($photo);
+
+            $resized = $source->resize(
+                [
+                    "method" => "cover",
+                    "width" => 400,
+                    "height" => 400
+                ]
+
+            );
+
+            $resized->toFile(public_path('photos') . '/' . $photoName);
+
+        } catch (\Throwable $e) {
+
+            $photo->move(public_path('photos'), $photoName);
+            Log::error('Tinify error: ' . $e->getMessage());
+
+        }
+
+
+
 
         $photoPath = url('photos/' . $photoName);
 
