@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Cache;
 
 class ImageUploadController extends Controller
@@ -20,9 +22,16 @@ class ImageUploadController extends Controller
             return abort(404);
         }
 
+        if ($user->photo) {
+
+            $previousPhotoPath = str_replace(url('/'), '', $user->photo);
+
+            File::delete(public_path($previousPhotoPath));
+        }
+
         $photo = $request->file('photo');
 
-        $photoName = time() . '.' . $photo->getClientOriginalExtension();
+        $photoName = Str::random(20) . time() . '.' . $photo->getClientOriginalExtension();
 
         $photo->move(public_path('photos'), $photoName);
 
