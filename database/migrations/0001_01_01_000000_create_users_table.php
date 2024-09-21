@@ -18,7 +18,7 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->string('verification_code');
-            $table->string('photo')->nullable();
+            $table->string('photo')->default('https://avatar.iran.liara.run/public');
             $table->boolean('is_admin')->default(false);
             $table->rememberToken();
             $table->timestamps();

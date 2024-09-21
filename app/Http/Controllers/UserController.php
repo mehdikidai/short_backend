@@ -110,43 +110,4 @@ class UserController extends Controller
     }
 
 
-    public function upload_photo_user(Request $request)
-    {
-
-        $user = $request->user();
-
-        $request->validate([
-            'photo' => 'required|image'
-        ]);
-
-        $photo = $request->file('photo');
-
-        $photoName = time() . '.' . $photo->getClientOriginalExtension();
-
-
-
-        if ($user->photo) {
-
-            $oldPhotoPath = public_path(parse_url($user->photo, PHP_URL_PATH));
-
-            if (file_exists($oldPhotoPath)) {
-                unlink($oldPhotoPath);
-            }
-            
-        }
-
-
-        $photo->move(public_path('photos'), $photoName);
-
-        $photoPath = url('photos/' . $photoName);
-
-
-
-        $user->photo = $photoPath;
-
-        $user->save();
-
-
-        return response()->json(['message' => 'Image uploaded successfully', 'photo' => $photoName]);
-    }
 }

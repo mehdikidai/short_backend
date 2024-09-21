@@ -14,8 +14,6 @@ Route::put('/user', [UserController::class, 'update'])->middleware('auth:sanctum
 
 Route::post('/register', [UserController::class, 'store']);
 
-Route::post('/upload-photo-user', [UserController::class, 'upload_photo_user'])->middleware('auth:sanctum');
-
 
 Route::controller(AuthController::class)->group(function () {
 
