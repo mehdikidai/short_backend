@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ImageProfileRequest;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Cache;
+use App\Http\Requests\ImageProfileRequest;
 
 
 class ImageUploadController extends Controller
