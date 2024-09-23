@@ -11,13 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('urls', function (Blueprint $table) {
+        Schema::create('clicks', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onUpdate('cascade')->onDelete('cascade');
-            $table->string('original_url');
-            $table->string('code')->uniqid();
-            $table->string('title');
-            $table->softDeletes();
+            $table->foreignId('url_id')->constrained('urls')->onUpdate('cascade')->onDelete('cascade');
+            $table->string('ip_address');
+            $table->string('country')->nullable();
+            $table->string('country_code')->nullable();
             $table->timestamps();
         });
     }
@@ -27,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('urls');
+        Schema::dropIfExists('clicks');
     }
 };

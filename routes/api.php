@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AnalyticsController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UrlController;
 use App\Http\Controllers\AuthController;
@@ -7,7 +8,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\EmailVerifyController;
 use App\Http\Controllers\ImageUploadController;
-
+use App\Models\User;
 
 Route::get('/user', [UserController::class, 'user'])->middleware('auth:sanctum');
 
@@ -43,4 +44,20 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/email/verify', [EmailVerifyController::class, 'verify'])->middleware('throttle:2,5');
 
     Route::get('/search', SearchController::class);
+});
+
+
+Route::middleware('auth:sanctum')->group(function(){
+
+    Route::get('/analytics/{filter?}',[AnalyticsController::class,'index']);
+
+});
+
+Route::get('/test', function () {
+
+    $users = User::with(['urls' => function ($query) {
+        $query->select('id', 'user_id','code');
+    }])->withCount('urls')->get();
+
+    return response()->json($users);
 });

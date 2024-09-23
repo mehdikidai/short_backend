@@ -3,11 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Url;
+use Illuminate\Support\Str;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Cache;
 use App\Http\Requests\StoreUrlRequest;
 use App\Http\Requests\UpdateUrlRequest;
-use Illuminate\Http\Request;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Gate;
 
 class UrlController extends Controller
 {
@@ -131,6 +132,10 @@ class UrlController extends Controller
 
         $res = $url->delete();
 
+        Cache::forget($url->user_id . '_number_of_visits');
+
         return response()->json(['message' => $res]);
     }
+
+
 }

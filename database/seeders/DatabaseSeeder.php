@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Click;
 use App\Models\Url;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -25,5 +26,8 @@ class DatabaseSeeder extends Seeder
         ]);
 
         Url::factory(10)->create();
+
+        Click::factory(1000)->create();
+        
     }
 }
