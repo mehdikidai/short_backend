@@ -17,6 +17,8 @@ return new class extends Migration
             $table->string('ip_address');
             $table->string('country')->nullable();
             $table->string('country_code')->nullable();
+            $table->float('lat')->nullable();
+            $table->float('lon')->nullable();
             $table->timestamps();
         });
     }

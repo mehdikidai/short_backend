@@ -30,9 +30,8 @@ class UrlController extends Controller
         if (!in_array($sortOrder, $this->sortBy)) {
 
             return abort(404);
-
         }
-        
+
 
         if (!$user) {
 
@@ -72,6 +71,8 @@ class UrlController extends Controller
         $data['user_id'] = $request->user()->id;
 
         Url::create($data);
+
+        $this->forgetCache([$request->user()->id . '_number_of_visits']);
 
         return response()->json($data, 201);
     }
@@ -132,10 +133,20 @@ class UrlController extends Controller
 
         $res = $url->delete();
 
-        Cache::forget($url->user_id . '_number_of_visits');
+        //Cache::forget($url->user_id . '_number_of_visits');
+
+        $this->forgetCache([$url->user_id . '_number_of_visits']);
 
         return response()->json(['message' => $res]);
     }
 
 
+    private function forgetCache($names)
+    {
+        
+        foreach ($names as $name) {
+            Cache::forget($name);
+        }
+
+    }
 }

@@ -27,11 +27,14 @@ class AnalyticsController extends Controller
 
         $startDate = $this->filter_by_date($filter);
 
-        $endDate = Carbon::now();
+        $endDate = Carbon::now()->endOfDay();
 
-        $total_urls = $user->urls()->count();
 
-        $onlySoftDeleted = Url::onlyTrashed()->count();
+        $total_urls = $user->urls()->whereBetween('created_at', [$startDate, $endDate])->count();
+
+
+        $onlySoftDeleted = Url::where('user_id', $user->id)->onlyTrashed()->whereBetween('deleted_at', [$startDate, $endDate])->count();
+
 
         $ids = Url::where('user_id', $user->id)->pluck('id')
             ->toArray();
@@ -46,7 +49,6 @@ class AnalyticsController extends Controller
         $number_of_visits = Cache::remember($user->id . '_number_of_visits', 60 * 60, function () use ($ids) {
 
             return $this->getNumberOfVisits($ids);
-            
         });  //
 
 

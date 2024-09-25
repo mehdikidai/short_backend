@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\GetInfoIp;
 use App\Models\Click;
 use Illuminate\Http\Request;
 use App\Models\Url;
@@ -17,10 +18,12 @@ class UrlRedirectController extends Controller
 
         if ($url) {
 
-            Click::create([
+            $new_click = Click::create([
                 'url_id' => $url->id,
                 'ip_address' => $request->ip()
             ]);
+
+            GetInfoIp::dispatch($new_click);
 
             Cache::forget($url->user_id . '_number_of_visits');
 
