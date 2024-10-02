@@ -68,6 +68,40 @@ class AnalyticsController extends Controller
         //
     }
 
+    /***
+     *  show all locations map
+     * 
+     *
+     */
+
+    public function showLocations(Request $request, ?FilterType $filter = FilterType::All)
+    {
+
+        $user = $request->user();
+
+        if (!in_array($filter, FilterType::cases())) {
+            return response()->json(['error' => 'Invalid filter specified.'], 404);
+        }
+
+        $startDate = $this->filter_by_date($filter);
+
+        $endDate = Carbon::now()->endOfDay();
+
+        //$locations = Url::where('user_id', $user->id)->with('clicks:id,url_id,lat,lon')->get();
+
+        $clicks = Click::whereBetween('created_at', [[$startDate, $endDate]])
+            ->whereHas('url', function ($query) use ($user) {
+                $query->where('user_id', $user->id);
+            })
+            ->select('id', 'url_id', 'lat', 'lon', 'city')
+            ->get();
+
+
+        return response()->json($clicks);
+    }
+
+
+
     private function filter_by_date(FilterType $filter): Carbon
     {
         return match ($filter) {

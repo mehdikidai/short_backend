@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Cache;
 use App\Http\Requests\StoreUrlRequest;
 use App\Http\Requests\UpdateUrlRequest;
+use App\Jobs\VirusTotal;
 
 class UrlController extends Controller
 {
@@ -51,6 +52,60 @@ class UrlController extends Controller
         return response()->json($urls);
     }
 
+    //---------------------------------------------------
+
+
+    public function trash(Request $request)
+    {
+
+        $user =  $request->user();
+
+
+        if (!$user) {
+
+            return response()->json(['message' => 'Unauthorized'], 401);
+        }
+
+
+        $urls = Url::where('user_id', $user->id)->onlyTrashed()->orderBy('deleted_at', 'desc')->paginate(6);
+
+
+        return response()->json($urls);
+    }
+
+    //---------------------------------------------------
+
+    public function forceDeleteUrl(Request $request, $id)
+    {
+
+        $url = Url::withTrashed()->findOrFail($id);
+
+        Gate::authorize('delet-url', $url);
+
+        $res = $url->forceDelete();
+
+        return response()->json(['success' => $res]);
+    }
+    //---------------------------------------------------
+
+
+    public function restoreUrl(Request $request, $id)
+    {
+
+        $url = Url::withTrashed()->findOrFail($id);
+
+        Gate::authorize('update-url', $url);
+
+        $res = $url->restore();
+
+        return response()->json(['success' => $res]);
+    }
+
+
+    //---------------------------------------------------
+
+
+
     /**
      * Store a newly created resource in storage.
      */
@@ -71,6 +126,8 @@ class UrlController extends Controller
         $data['user_id'] = $request->user()->id;
 
         Url::create($data);
+
+        VirusTotal::dispatch();
 
         $this->forgetCache([$request->user()->id . '_number_of_visits']);
 
@@ -143,10 +200,9 @@ class UrlController extends Controller
 
     private function forgetCache($names)
     {
-        
+
         foreach ($names as $name) {
             Cache::forget($name);
         }
-
     }
 }

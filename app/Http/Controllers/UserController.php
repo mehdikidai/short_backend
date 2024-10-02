@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
+use App\Models\Role;
 use App\Models\User;
 use App\Jobs\SendEmailJob;
 use Illuminate\Http\Request;
+use App\Traits\CodeVerification;
+use App\Jobs\DeleteUnverifiedUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Cache;
-use App\Traits\CodeVerification;
 
 class UserController extends Controller
 {
@@ -43,6 +46,12 @@ class UserController extends Controller
             'verification_code' => $v_code,
         ]);
 
+        DeleteUnverifiedUsers::dispatch($user->id)->delay(Carbon::now()->addHours(24));
+
+        $userRole = Role::where('name', 'User')->first();
+
+        $user->roles()->attach($userRole->id);
+
         $token = $user->createToken($user->name . '-AuthToken')->plainTextToken;
 
         SendEmailJob::dispatch($data['email'], $v_code, $data['name']);
@@ -72,7 +81,7 @@ class UserController extends Controller
         ]);
 
 
-        if ($user->email !== $data['email']) {
+        if ($user->email !== $data['email'] && !is_null($user->email_verified_at)) {
 
             $v_code = $this->make_verification_code();
             $user->email_verified_at = null;
@@ -107,5 +116,24 @@ class UserController extends Controller
 
 
         return response()->json($user);
+    }
+
+
+    public function users()
+    {
+        
+        $users = User::with(['roles:id,name'])->paginate(10);
+
+        $users->data = collect($users->items())->map(function ($user) {
+       
+        $user->is_admin = $user->roles->pluck('name')->contains('Admin');
+        
+        $user->makeHidden(['roles', 'email_verified_at']);
+        
+        return $user;
+
+    });
+
+    return response()->json($users);
     }
 }

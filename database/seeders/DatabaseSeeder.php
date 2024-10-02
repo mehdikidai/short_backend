@@ -2,11 +2,14 @@
 
 namespace Database\Seeders;
 
-use App\Models\Click;
 use App\Models\Url;
+use App\Models\Role;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Click;
+use App\Models\RoleUser;
 use Illuminate\Database\Seeder;
+use Database\Seeders\RoleSeeder;
 use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
@@ -16,7 +19,11 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+
+
+        $this->call([RoleSeeder::class]);
+
+        $userRole = Role::where('name', 'User')->first();
 
         User::factory()->create([
             'name' => 'mehdi kidai',
@@ -25,9 +32,23 @@ class DatabaseSeeder extends Seeder
             'verification_code' => mt_rand(100000, 999999)
         ]);
 
-        Url::factory(10)->create();
+        User::factory(2)->create()->each(function ($user) use ($userRole) {
+            $user->roles()->attach($userRole->id);
+        });
+
+        Url::factory(100)->create();
 
         Click::factory(1000)->create();
-        
+
+        RoleUser::insert([
+            [
+                'role_id' => 1,
+                'user_id' => 1
+            ],
+            [
+                'role_id' => 2,
+                'user_id' => 1
+            ],
+        ]);
     }
 }

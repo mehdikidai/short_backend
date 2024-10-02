@@ -19,7 +19,6 @@ return new class extends Migration
             $table->string('password');
             $table->string('verification_code');
             $table->string('photo')->nullable();
-            $table->boolean('is_admin')->default(false);
             $table->rememberToken();
             $table->timestamps();
         });

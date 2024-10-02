@@ -36,7 +36,7 @@ class GetInfoIp implements ShouldQueue
 
         //Log::info("ip :$this->ip and id:$this->id");
 
-        $response = Http::get('http://ip-api.com/json/24.48.0.1');
+        $response = Http::get('http://ip-api.com/json/105.155.219.130');
 
         //$response = Http::get("http://ip-api.com/json/{$this->ip}");
 
@@ -48,6 +48,7 @@ class GetInfoIp implements ShouldQueue
             if ($click) {
 
                 $click->country = $response['country'] ?? null;
+                $click->city = $response['city'] ?? null;
                 $click->country_code = $response['countryCode'] ?? null;
                 $click->lat = $response['lat'] ?? null;
                 $click->lon = $response['lon'] ?? null;
