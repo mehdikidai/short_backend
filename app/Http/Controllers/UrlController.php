@@ -67,7 +67,7 @@ class UrlController extends Controller
         }
 
 
-        $urls = Url::where('user_id', $user->id)->onlyTrashed()->orderBy('deleted_at', 'desc')->paginate(6);
+        $urls = Url::where('user_id', $user->id)->onlyTrashed()->orderBy('deleted_at', 'desc')->paginate(10);
 
 
         return response()->json($urls);
@@ -137,12 +137,23 @@ class UrlController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show($id)
+    public function show(Request $request, $id)
     {
 
-        $url = Url::findOrFail($id);
+
+        $url = Url::with(['clicks' => function ($query) {
+
+            $query->select('id', 'url_id', 'created_at');
+
+        }])->withCount('clicks')->findOrFail($id);
+
 
         Gate::authorize('view-url', $url);
+
+        $url->url_server = $request->root();
+        
+        $url->domain = preg_replace('/^https?:\/\//', '', $request->root());
+
 
         return response()->json($url);
     }
