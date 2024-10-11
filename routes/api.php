@@ -8,7 +8,6 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\EmailVerifyController;
 use App\Http\Controllers\ImageUploadController;
-use App\Models\User;
 
 
 Route::get('/user', [UserController::class, 'user'])->middleware('auth:sanctum');

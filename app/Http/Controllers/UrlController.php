@@ -3,13 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Models\Url;
+use App\Models\Click;
+use App\Jobs\VirusTotal;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Cache;
 use App\Http\Requests\StoreUrlRequest;
 use App\Http\Requests\UpdateUrlRequest;
-use App\Jobs\VirusTotal;
 
 class UrlController extends Controller
 {
@@ -141,21 +144,41 @@ class UrlController extends Controller
     {
 
 
+
+
         $url = Url::with(['clicks' => function ($query) {
 
-            $query->select('id', 'url_id', 'created_at');
-
+            $query->select('id', 'url_id', 'created_at', 'browser', 'device');
+            
         }])->withCount('clicks')->findOrFail($id);
 
 
         Gate::authorize('view-url', $url);
 
+
+        $topDevice = Click::select('device', DB::raw('count(*) as total'))
+            ->where('url_id', $url->id)
+            ->groupBy('device')
+            ->orderBy('total', 'desc')
+            ->limit(3)
+            ->get();
+
+        $topBrowsers = Click::select('browser', DB::raw('count(*) as total'))
+            ->where('url_id', $url->id)
+            ->groupBy('browser')
+            ->orderBy('total', 'desc')
+            ->limit(4)
+            ->get();
+
+
         $url->url_server = $request->root();
-        
         $url->domain = preg_replace('/^https?:\/\//', '', $request->root());
+        $url->top_devices = $topDevice;
+        $url->top_browsers = $topBrowsers;
 
 
         return response()->json($url);
+
     }
 
     /**

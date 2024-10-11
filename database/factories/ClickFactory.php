@@ -20,6 +20,9 @@ class ClickFactory extends Factory
         return [
             'url_id' => Url::all()->random()->id,
             'ip_address' => fake()->ipv4(),
+            'browser' => fake()->randomElement(['firefox', 'chrome', 'safari']),
+            'device' => fake()->randomElement(['mobile', 'desktop','tablet']),
+            'country' => fake()->randomElement(["Belgium", "Canada", "France", "Germany"]),
             'created_at' => fake()->dateTimeBetween('-20 days', now()),
             'lat' => fake()->latitude(-90, 90),
             'lon' => fake()->longitude(-180, 180),

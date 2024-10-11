@@ -13,7 +13,9 @@ class Click extends Model
         'url_id',
         'ip_address',
         'country',
-        'country_code'
+        'country_code',
+        'browser',
+        'device'
     ];
 
     public function url()

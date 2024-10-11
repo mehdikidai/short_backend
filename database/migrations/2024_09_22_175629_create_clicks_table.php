@@ -18,6 +18,8 @@ return new class extends Migration
             $table->string('country')->nullable();
             $table->string('city')->nullable();
             $table->string('country_code')->nullable();
+            $table->string('browser')->nullable();
+            $table->string('device')->nullable();
             $table->float('lat')->nullable();
             $table->float('lon')->nullable();
             $table->timestamps();
