@@ -23,8 +23,8 @@ class SearchController extends Controller
                     ->orWhere('original_url', 'like', '%' . $query . '%');
             })
             ->latest()
-            ->limit(6)
-            ->get(['id','title']);
+            ->limit(12)
+            ->get(['id','title','original_url']);
 
 
         SocketEmit::dispatch($userId);
