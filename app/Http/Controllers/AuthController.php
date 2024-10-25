@@ -27,6 +27,10 @@ class AuthController extends Controller
 
         $token = $user->createToken($user->name . '-AuthToken')->plainTextToken;
 
+        $user->is_admin = $user->roles->pluck('name')->contains('Admin');
+
+        $user->makeHidden(['roles']);
+
 
         return response()->json(['token' => $token, 'user' => $user]);
     }

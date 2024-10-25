@@ -47,6 +47,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('/force_delete_url/{id}', 'forceDeleteUrl');
 
         Route::delete('/urls/{id}', 'destroy');
+        
     });
 
     Route::post('/email/verify', [EmailVerifyController::class, 'verify'])->middleware('throttle:2,5');

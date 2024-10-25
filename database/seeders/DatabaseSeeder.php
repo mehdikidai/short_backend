@@ -32,11 +32,11 @@ class DatabaseSeeder extends Seeder
             'verification_code' => mt_rand(100000, 999999)
         ]);
 
-        User::factory(2)->create()->each(function ($user) use ($userRole) {
+        User::factory(19)->create()->each(function ($user) use ($userRole) {
             $user->roles()->attach($userRole->id);
         });
 
-        Url::factory(100)->create();
+        Url::factory(300)->create();
 
         Click::factory(1000)->create();
 

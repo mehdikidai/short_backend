@@ -111,7 +111,11 @@ class UserController extends Controller
 
         $user = Cache::remember('user_' . $userId, 60 * 5, function () use ($request) {
 
-            return $request->user();
+            $user = $request->user();
+            $user['is_admin'] = $user->roles()->where('name', 'admin')->exists();
+
+            return $user;
+
         });
 
 
@@ -122,7 +126,7 @@ class UserController extends Controller
     public function users()
     {
         
-        $users = User::with(['roles:id,name'])->paginate(10);
+        $users = User::with(['roles:id,name'])->paginate(6);
 
         $users->data = collect($users->items())->map(function ($user) {
        
