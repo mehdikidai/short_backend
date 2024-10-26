@@ -143,9 +143,6 @@ class UrlController extends Controller
     public function show(Request $request, $id)
     {
 
-
-
-
         $url = Url::with(['clicks' => function ($query) {
 
             $query->select('id', 'url_id', 'created_at', 'browser', 'device');
