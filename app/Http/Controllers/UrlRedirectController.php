@@ -21,19 +21,11 @@ class UrlRedirectController extends Controller
 
         $browser = $agent->browser();
 
-        $device = null;
-
-        switch (true) {
-            case $agent->isTablet():
-                $device = 'tablet';
-                break;
-            case $agent->isMobile():
-                $device = 'mobile';
-                break;
-            default:
-                $device = 'desktop';
-        }
-
+        $device = match(true) {
+            $agent->isTablet() => 'tablet',
+            $agent->isMobile() => 'mobile',
+            default => 'desktop'
+        };
 
         if ($url) {
 
