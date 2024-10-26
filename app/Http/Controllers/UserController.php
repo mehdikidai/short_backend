@@ -9,6 +9,7 @@ use App\Jobs\SendEmailJob;
 use Illuminate\Http\Request;
 use App\Traits\CodeVerification;
 use App\Jobs\DeleteUnverifiedUsers;
+use App\Jobs\SocketEmit;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Cache;
 
@@ -57,6 +58,7 @@ class UserController extends Controller
         SendEmailJob::dispatch($data['email'], $v_code, $data['name']);
 
         return response()->json(['token' => $token, 'user' => $user], 201);
+        
     }
 
     /**
@@ -99,10 +101,20 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      */
+
+
     public function destroy(string $id)
     {
-        //
+
+        $user = User::findOrFail($id);
+
+        $user->delete();
+
+        return response()->json(['message' => 'user deleted'], 200);
+
     }
+
+    //---------------------------------
 
     public function user(Request $request)
     {
@@ -115,7 +127,6 @@ class UserController extends Controller
             $user['is_admin'] = $user->roles()->where('name', 'admin')->exists();
 
             return $user;
-
         });
 
 
@@ -123,21 +134,26 @@ class UserController extends Controller
     }
 
 
+    //---------------------------------
+
+
     public function users()
     {
-        
-        $users = User::with(['roles:id,name'])->paginate(6);
+
+        $users = User::with(['roles:id,name'])->latest()->paginate(6);
 
         $users->data = collect($users->items())->map(function ($user) {
-       
-        $user->is_admin = $user->roles->pluck('name')->contains('Admin');
-        
-        $user->makeHidden(['roles', 'email_verified_at']);
-        
-        return $user;
 
-    });
+            $user->is_admin = $user->roles->pluck('name')->contains('Admin');
 
-    return response()->json($users);
+            $user->makeHidden(['roles', 'email_verified_at']);
+
+            return $user;
+        });
+
+        return $users;
+
+        return response()->json($users);
+
     }
 }

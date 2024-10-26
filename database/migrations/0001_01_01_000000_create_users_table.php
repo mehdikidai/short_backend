@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('verification_code');
             $table->string('photo')->nullable();
             $table->rememberToken();
+            $table->softDeletes();
             $table->timestamps();
         });
 

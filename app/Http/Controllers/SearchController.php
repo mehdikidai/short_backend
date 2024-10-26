@@ -27,10 +27,6 @@ class SearchController extends Controller
             ->get(['id','title','original_url']);
 
 
-        SocketEmit::dispatch($userId);
-
-
-
         return response()->json($results);
     }
 }

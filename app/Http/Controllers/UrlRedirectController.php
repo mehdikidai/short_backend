@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Jobs\GetInfoIp;
-use App\Models\Click;
-use Illuminate\Http\Request;
 use App\Models\Url;
-use Illuminate\Support\Facades\Cache;
+use App\Models\Click;
+use App\Jobs\GetInfoIp;
+use App\Jobs\SocketEmit;
 use Jenssegers\Agent\Agent;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class UrlRedirectController extends Controller
 {
@@ -22,15 +23,16 @@ class UrlRedirectController extends Controller
 
         $device = null;
 
-        if ($agent->isTablet()) {
-            $device = 'tablet';
-        } elseif ($agent->isMobile()) {
-            $device = 'mobile';
-        } else {
-            $device = 'desktop';
+        switch (true) {
+            case $agent->isTablet():
+                $device = 'tablet';
+                break;
+            case $agent->isMobile():
+                $device = 'mobile';
+                break;
+            default:
+                $device = 'desktop';
         }
-
-        //$version = $agent->version($browser);
 
 
         if ($url) {
@@ -46,6 +48,7 @@ class UrlRedirectController extends Controller
 
             Cache::forget($url->user_id . '_number_of_visits');
 
+            SocketEmit::dispatch('newVisit', $url->user_id);
 
             return redirect()->to($url->original_url);
         }

@@ -37,5 +37,8 @@ return [
     'tinify' => [
         'key' => env('TINIFY_API_KEY'),
     ],
+    'socket' => [
+        'url' => env('SOCKET_IO_URL')
+    ]
 
 ];

@@ -10,13 +10,22 @@ use App\Http\Controllers\EmailVerifyController;
 use App\Http\Controllers\ImageUploadController;
 
 
-Route::get('/user', [UserController::class, 'user'])->middleware('auth:sanctum');
 
-Route::get('/users', [UserController::class, 'users'])->middleware(['auth:sanctum', 'role:admin']);
+Route::controller(UserController::class)->middleware('auth:sanctum')->group(function () {
 
-Route::put('/user', [UserController::class, 'update'])->middleware('auth:sanctum');
+    Route::get('/user', 'user');
+
+    Route::get('/users', 'users')->middleware(['role:admin']);
+
+    Route::put('/user', 'update');
+
+    Route::delete('/user/{id}', 'destroy');
+
+});
 
 Route::post('/register', [UserController::class, 'store']);
+
+
 
 Route::post('/upload_photo_profile', [ImageUploadController::class, 'upload'])->middleware('auth:sanctum');
 
@@ -26,6 +35,7 @@ Route::controller(AuthController::class)->group(function () {
     Route::post('/login', 'login')->middleware('throttle:5,1');
 
     Route::post('/logout', 'logout')->middleware('auth:sanctum');
+    
 });
 
 Route::middleware('auth:sanctum')->group(function () {
@@ -47,12 +57,12 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('/force_delete_url/{id}', 'forceDeleteUrl');
 
         Route::delete('/urls/{id}', 'destroy');
-        
     });
 
     Route::post('/email/verify', [EmailVerifyController::class, 'verify'])->middleware('throttle:2,5');
 
     Route::get('/search', SearchController::class);
+
 });
 
 
@@ -60,4 +70,5 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/analytics/{filter?}', [AnalyticsController::class, 'index']);
     Route::get('/locations/{filter?}', [AnalyticsController::class, 'showLocations']);
+
 });
