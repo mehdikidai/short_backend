@@ -21,7 +21,7 @@ class ImageUploadController extends Controller
         $this->key_tinify = config('services.tinify.key');
     }
 
-    public function upload(ImageProfileRequest $request)
+    public function __invoke(ImageProfileRequest $request)
     {
 
         $request->validated();
@@ -53,8 +53,8 @@ class ImageUploadController extends Controller
             $resized = $source->resize(
                 [
                     "method" => "cover",
-                    "width" => 400,
-                    "height" => 400
+                    "width" => 300,
+                    "height" => 300
                 ]
 
             );

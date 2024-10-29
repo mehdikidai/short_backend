@@ -9,9 +9,9 @@ use App\Jobs\SendEmailJob;
 use Illuminate\Http\Request;
 use App\Traits\CodeVerification;
 use App\Jobs\DeleteUnverifiedUsers;
-use App\Jobs\SocketEmit;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Gate;
 
 class UserController extends Controller
 {
@@ -58,7 +58,6 @@ class UserController extends Controller
         SendEmailJob::dispatch($data['email'], $v_code, $data['name']);
 
         return response()->json(['token' => $token, 'user' => $user], 201);
-        
     }
 
     /**
@@ -108,10 +107,11 @@ class UserController extends Controller
 
         $user = User::findOrFail($id);
 
+        Gate::authorize('delete-user', $user);
+
         $user->delete();
 
         return response()->json(['message' => 'user deleted'], 200);
-
     }
 
     //---------------------------------
@@ -154,6 +154,42 @@ class UserController extends Controller
         return $users;
 
         return response()->json($users);
-
     }
+
+
+    // update user password ===============
+
+
+
+    public function updatePassword(Request $request)
+    {
+
+        $data = $request->validate([
+            "currentPassword" => "required|min:8|max:25",
+            "newPassword" => "required|min:8|max:25|different:currentPassword",
+        ]);
+
+        $user = $request->user();
+
+        $old_pass = $user->password;
+
+        if (!Hash::check($data['currentPassword'], $old_pass)) {
+
+            return response()->json(['message' => 'password ghalt'], 400);
+        }
+
+        $user->password = Hash::make($data["newPassword"]);
+
+        $res = $user->save();
+
+        return response()->json(["updated" => $res], 201);
+        
+    }
+
+
+    // update user password ===============
+
+
+
+
 }
