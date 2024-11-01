@@ -183,13 +183,29 @@ class UserController extends Controller
         $res = $user->save();
 
         return response()->json(["updated" => $res], 201);
-        
     }
 
 
     // update user password ===============
 
+    // delete account =====================
+
+    public function delete_account(Request $request)
+    {
 
 
+        $data = $request->validate(['password' => 'required|min:8']);
 
+        $user = $request->user();
+
+        if (!Hash::check($data['password'], $user->password)) return response()->json($data, 400);
+
+        Gate::authorize('delete_account',$user);
+
+        $user->delete();
+        
+        return response()->json($data, 200);
+
+
+    }
 }

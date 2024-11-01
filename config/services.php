@@ -39,6 +39,9 @@ return [
     ],
     'socket' => [
         'url' => env('SOCKET_IO_URL')
-    ]
+    ],
+    'ip_api' => [
+        'url' => env('IP_API_URL', 'http://ip-api.com/json'),
+    ],
 
 ];

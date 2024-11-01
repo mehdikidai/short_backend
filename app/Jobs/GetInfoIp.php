@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Models\Click;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Queue\SerializesModels;
@@ -36,9 +37,13 @@ class GetInfoIp implements ShouldQueue
 
         //Log::info("ip :$this->ip and id:$this->id");
 
-        $response = Http::get('http://ip-api.com/json/105.155.219.130');
+        $apiUrl = config('services.ip_api.url', 'http://ip-api.com/json');
 
-        //$response = Http::get("http://ip-api.com/json/{$this->ip}");
+        if (App::environment('local')) {
+            $this->ip = '88.244.12.34'; 
+        }
+
+        $response = Http::get("$apiUrl/{$this->ip}");
 
 
         if ($response->successful()) {

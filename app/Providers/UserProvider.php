@@ -22,5 +22,6 @@ class UserProvider extends ServiceProvider
     public function boot(): void
     {
         Gate::define('delete-user', [UserPolicy::class, 'delete']);
+        Gate::define('delete_account', [UserPolicy::class, 'delete_account']);
     }
 }

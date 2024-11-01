@@ -44,12 +44,22 @@ class UserPolicy
      */
     public function delete(User $user, User $model)
     {
-        
-        if ($model->roles->pluck('name')->contains('Admin')) return false;
-        
-        return $user->roles->pluck('name')->contains('Admin') || $model->id === $user->id;
 
+        if ($model->roles->pluck('name')->contains('Admin')) return false;
+
+        return $user->roles->pluck('name')->contains('Admin') || $model->id === $user->id;
     }
+
+
+    /**
+     * Determine whether the user can delete account the model.
+     */
+
+    public function delete_account(User $authUser, User $user)
+    {
+        return $authUser->id === $user->id && !$user->roles->pluck('name')->contains('Admin');
+    }
+
 
     /**
      * Determine whether the user can restore the model.

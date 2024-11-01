@@ -38,6 +38,7 @@ class EmailVerifyController extends Controller
         $user->save();
 
 
-        return response()->json(['code' => ''], 200);
+        return response()->json(['message' => 'email verified successfully'], 200);
+        
     }
 }

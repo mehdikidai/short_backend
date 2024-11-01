@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 
 use Carbon\Carbon;
 use App\Models\Url;
-use App\Enums\FilterType;
+use App\Models\User;
 use App\Models\Click;
+use App\Enums\FilterType;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cache;
 
 class AnalyticsController extends Controller
@@ -52,11 +54,14 @@ class AnalyticsController extends Controller
         });  //
 
 
+        $most_countries = $this->most_countries($user->id, $startDate, $endDate);
+
         return response()->json([
             'total_urls' => $total_urls,
             'urls' => $total_visits,
             'urls_trash' => $onlySoftDeleted,
-            'number_of_visits' => $number_of_visits
+            'number_of_visits' => $number_of_visits,
+            'most_countries' => $most_countries,
         ]);
     }
 
@@ -132,5 +137,20 @@ class AnalyticsController extends Controller
         }
 
         return $arr;
+    }
+
+    private function most_countries($id, $startDate, $endDate)
+    {
+
+        $topCountries = Click::join('urls', 'clicks.url_id', '=', 'urls.id')
+
+            ->where('urls.user_id', $id)
+            ->whereBetween('clicks.created_at', [$startDate, $endDate])
+            ->select('clicks.country', 'clicks.country_code as code', DB::raw('COUNT(*) as visits'))
+            ->groupBy('clicks.country', 'clicks.country_code')
+            ->orderByDesc('visits')
+            ->get();
+
+        return $topCountries;
     }
 }
