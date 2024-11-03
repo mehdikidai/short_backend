@@ -32,7 +32,14 @@ class DatabaseSeeder extends Seeder
             'verification_code' => mt_rand(100000, 999999)
         ]);
 
-        User::factory(19)->create()->each(function ($user) use ($userRole) {
+        User::factory()->create([
+            'name' => 'simplon',
+            'email' => 'admin@simplon.com',
+            'password' => Hash::make('12345678'),
+            'verification_code' => mt_rand(100000, 999999)
+        ]);
+
+        User::factory(18)->create()->each(function ($user) use ($userRole) {
             $user->roles()->attach($userRole->id);
         });
 
@@ -43,10 +50,10 @@ class DatabaseSeeder extends Seeder
         RoleUser::insert([
             [
                 'role_id' => 1,
-                'user_id' => 1
+                'user_id' => 2
             ],
             [
-                'role_id' => 2,
+                'role_id' => 1,
                 'user_id' => 1
             ],
         ]);

@@ -24,7 +24,6 @@ Route::controller(UserController::class)->middleware('auth:sanctum')->group(func
     Route::delete('/user/{id}', 'destroy');
 
     Route::delete('/account', 'delete_account');
-
 });
 
 Route::post('/register', [UserController::class, 'store']);
@@ -39,7 +38,12 @@ Route::controller(AuthController::class)->group(function () {
     Route::post('/login', 'login')->middleware('throttle:5,1');
 
     Route::post('/logout', 'logout')->middleware('auth:sanctum');
-    
+
+    Route::post('/password/send-reset-code', 'sendResetCodeEmail');
+
+    Route::post('/password/reset', 'resetPassword')->middleware('throttle:5,1');
+
+
 });
 
 Route::middleware('auth:sanctum')->group(function () {
@@ -74,6 +78,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/analytics/{filter?}', [AnalyticsController::class, 'index']);
     Route::get('/locations/{filter?}', [AnalyticsController::class, 'showLocations']);
 });
+
+
 
 
 //Route::get('/tt',[AnalyticsController::class,'most_countries'])->middleware('auth:sanctum');

@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
@@ -46,5 +48,44 @@ class AuthController extends Controller
         ]);
     }
 
-    
+    public function sendResetCodeEmail(Request $request)
+    {
+
+        $request->validate(['email' => 'required|email']);
+
+        $user = User::where('email', $request->email)->first();
+
+        if (!$user)
+            return response()->json(['message' => 'Email not found'], 400);
+
+
+        $code = Str::lower(Str::random(6));
+
+        Cache::put('password_reset_' . $request->email, $code, now()->addMinutes(10));
+
+        return response()->json(['code' => $code]);
+    }
+
+    public function resetPassword(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'code' => 'required|string|size:6',
+            'password' => 'required|min:8',
+        ]);
+
+        $cachedCode = Cache::get('password_reset_' . $request->email);
+
+        if (!$cachedCode || $cachedCode !== $request->code) {
+            return response()->json(['message' => 'الرمز غير صحيح أو انتهت صلاحيته.'], 400);
+        }
+
+        $user = User::where('email', $request->email)->first();
+        $user->password = Hash::make($request->password);
+        $user->save();
+
+        Cache::forget('password_reset_' . $request->email);
+
+        return response()->json(['message' => 'تم تحديث كلمة المرور بنجاح.']);
+    }
 }
