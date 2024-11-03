@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\SendEmailResetPassword;
 use App\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -63,7 +64,18 @@ class AuthController extends Controller
 
         Cache::put('password_reset_' . $request->email, $code, now()->addMinutes(10));
 
-        return response()->json(['code' => $code]);
+        try {
+
+            SendEmailResetPassword::dispatch($user->email, $code, $user->name);
+
+        } catch (\Exception $e) {
+
+            return response()->json(['message' => 'Failed to send reset code, please try again'], 500);
+        }
+
+
+        return response()->json(['message' => 'Code Sent']);
+        
     }
 
     public function resetPassword(Request $request)
