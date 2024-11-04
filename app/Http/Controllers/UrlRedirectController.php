@@ -12,7 +12,8 @@ use Illuminate\Support\Facades\Cache;
 
 class UrlRedirectController extends Controller
 {
-    public function redirect(Request $request, $code)
+    
+    public function __invoke(Request $request, $code)
     {
 
         $url = Url::where('code', $code)->first();
