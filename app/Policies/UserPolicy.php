@@ -42,12 +42,12 @@ class UserPolicy
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, User $model)
+    public function delete(User $user, User $model): bool
     {
 
-        if ($model->roles->pluck('name')->contains('Admin')) return false;
+        if ($model->roles->pluck('name')->contains('Admin')) return false; // yla kan user machi admin ( admin bgha yms7 admin khor  )
 
-        return $user->roles->pluck('name')->contains('Admin') || $model->id === $user->id;
+        return $user->roles->pluck('name')->contains('Admin') || $model->id === $user->id; // yla kan user hwa mol account  aw admin
     }
 
 
@@ -55,9 +55,10 @@ class UserPolicy
      * Determine whether the user can delete account the model.
      */
 
-    public function delete_account(User $authUser, User $user)
+    public function delete_account(User $authUser, User $user): bool
     {
-        return $authUser->id === $user->id && !$user->roles->pluck('name')->contains('Admin');
+
+        return $authUser->id === $user->id && !$user->roles->pluck('name')->contains('Admin'); // yla kan user 3adi ymkn yder delete l account dyalo wlki admin la mimknch
     }
 
 

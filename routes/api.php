@@ -1,9 +1,10 @@
 <?php
 
+require __DIR__ . "/auth.php";
+
 use App\Http\Controllers\AnalyticsController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UrlController;
-use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\EmailVerifyController;
@@ -11,65 +12,58 @@ use App\Http\Controllers\ImageUploadController;
 
 
 
-Route::controller(UserController::class)->middleware('auth:sanctum')->group(function () {
+Route::prefix('user')->middleware('auth:sanctum')->group(function () {
 
-    Route::get('/user', 'user');
 
-    Route::get('/users', 'users')->middleware(['role:admin']);
+    Route::controller(UserController::class)->group(function () {
 
-    Route::put('/user', 'update');
+        Route::get('/', 'user'); // user informations
 
-    Route::put('/user/upadet/password', 'updatePassword');
+        Route::get('/users', 'users')->middleware(['role:admin']); // get all users - admin
 
-    Route::delete('/user/{id}', 'destroy');
+        Route::put('/', 'update'); // update name - email
 
-    Route::delete('/account', 'delete_account');
+        Route::put('/upadete-password', 'updatePassword'); // change password
+
+        Route::delete('/account', 'deleteAccount'); // remove account - user
+
+        Route::delete('/{id}', 'destroy')->where('id', '^[0-9]+$'); // remove user account - admin
+
+    });
 });
-
-Route::post('/register', [UserController::class, 'store']);
-
 
 
 Route::post('/upload_photo_profile', ImageUploadController::class)->middleware('auth:sanctum');
 
 
-Route::controller(AuthController::class)->group(function () {
-
-    Route::post('/login', 'login')->middleware('throttle:5,1');
-
-    Route::post('/logout', 'logout')->middleware('auth:sanctum');
-
-    Route::post('/password/send-reset-code', 'sendResetCodeEmail');
-
-    Route::post('/password/reset', 'resetPassword')->middleware('throttle:5,1');
-
-
-});
-
 Route::middleware('auth:sanctum')->group(function () {
 
     Route::controller(UrlController::class)->group(function () {
 
-        Route::get('/urls', 'index');
+        Route::get('/urls/{sort?}', 'index')->where('sort', 'desc|asc'); // get all short links
 
-        Route::get('/trash', 'trash');
+        Route::get('/trash', 'trash'); // get all short links trashed
 
-        Route::post('/urls', 'store');
+        Route::post('/urls', 'store')->middleware('throttle:10,20'); // add new short link
 
-        Route::get('/urls/{id}', 'show');
+        Route::get('/urls/{id}', 'show')->where('id', '^[0-9]+$'); // show short link details
 
-        Route::put('/urls/{id}', 'update');
+        Route::put('/urls/{id}', 'update')->where('id', '^[0-9]+$'); // update short link
 
-        Route::patch('/restore_url/{id}', 'restoreUrl');
+        Route::put('/urls/{id}/visual', 'visualUrl')->where('id', '^[0-9]+$');
 
-        Route::delete('/force_delete_url/{id}', 'forceDeleteUrl');
+        Route::patch('/restore_url/{id}', 'restoreUrl')->where('id', '^[0-9]+$'); // restore short link from trash
 
-        Route::delete('/urls/{id}', 'destroy');
+        Route::delete('/force_delete_url/{id}', 'forceDeleteUrl')->where('id', '^[0-9]+$'); // remove short link
+
+        Route::delete('/urls/{id}', 'destroy')->where('id', '^[0-9]+$'); // move short link to trash
+
     });
 
-    Route::post('/email/verify', [EmailVerifyController::class, 'verify'])->middleware('throttle:2,5');
+    Route::post('/email/verify', EmailVerifyController::class)->middleware('throttle:5,15');
 
-    Route::get('/search', SearchController::class);
+    Route::get('/search', SearchController::class); // search by title and link 
+
 });
 
 
@@ -77,9 +71,5 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/analytics/{filter?}', [AnalyticsController::class, 'index']);
     Route::get('/locations/{filter?}', [AnalyticsController::class, 'showLocations']);
+
 });
-
-
-
-
-//Route::get('/tt',[AnalyticsController::class,'most_countries'])->middleware('auth:sanctum');

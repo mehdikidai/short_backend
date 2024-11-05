@@ -190,10 +190,11 @@ class UserController extends Controller
 
     // delete account =====================
 
-    public function delete_account(Request $request)
+    public function deleteAccount(Request $request)
     {
 
-
+        
+        
         $data = $request->validate(['password' => 'required|min:8']);
 
         $user = $request->user();
@@ -205,6 +206,8 @@ class UserController extends Controller
         $user->delete();
         
         return response()->json($data, 200);
+
+        
 
 
     }

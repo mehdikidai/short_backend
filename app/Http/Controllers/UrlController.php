@@ -11,39 +11,29 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Cache;
-use App\Http\Requests\StoreUrlRequest;
-use App\Http\Requests\UpdateUrlRequest;
+
 
 class UrlController extends Controller
 {
 
 
-    public $sortBy = ['desc', 'asc'];
+   
 
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index(Request $request, $sort = 'desc')
     {
 
         $user =  auth('sanctum')->user();
 
-        $sortOrder = $request->query('sort_order', 'desc');
-
-
-        if (!in_array($sortOrder, $this->sortBy)) {
-
-            return abort(404);
-        }
-
-
         if (!$user) {
 
             return response()->json(['message' => 'Unauthorized'], 401);
+
         }
 
-        $urls = Url::where('user_id', $user->id)->orderBy('created_at', $sortOrder)->paginate(6);
-
+        $urls = Url::where('user_id', $user->id)->orderBy('created_at', $sort)->paginate(6);
 
         $urls->getCollection()->transform(function ($url) use ($request) {
             $url->url_server = $request->root();
@@ -53,6 +43,7 @@ class UrlController extends Controller
 
 
         return response()->json($urls);
+
     }
 
     //---------------------------------------------------
@@ -78,7 +69,7 @@ class UrlController extends Controller
 
     //---------------------------------------------------
 
-    public function forceDeleteUrl(Request $request, $id)
+    public function forceDeleteUrl($id)
     {
 
         $url = Url::withTrashed()->findOrFail($id);
@@ -92,7 +83,7 @@ class UrlController extends Controller
     //---------------------------------------------------
 
 
-    public function restoreUrl(Request $request, $id)
+    public function restoreUrl($id)
     {
 
         $url = Url::withTrashed()->findOrFail($id);
@@ -102,6 +93,7 @@ class UrlController extends Controller
         $res = $url->restore();
 
         return response()->json(['success' => $res]);
+
     }
 
 
@@ -148,7 +140,6 @@ class UrlController extends Controller
         $url = Url::with(['clicks' => function ($query) {
 
             $query->select('id', 'url_id', 'created_at', 'browser', 'device');
-            
         }])->withCount('clicks')->findOrFail($id);
 
 
@@ -177,15 +168,6 @@ class UrlController extends Controller
 
 
         return response()->json($url);
-
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Url $url)
-    {
-        //
     }
 
     /**
@@ -223,13 +205,12 @@ class UrlController extends Controller
 
         $res = $url->delete();
 
-        //Cache::forget($url->user_id . '_number_of_visits');
-
         $this->forgetCache([$url->user_id . '_number_of_visits']);
 
         return response()->json(['message' => $res]);
     }
 
+    // --------------------------------------
 
     private function forgetCache($names)
     {
@@ -237,5 +218,28 @@ class UrlController extends Controller
         foreach ($names as $name) {
             Cache::forget($name);
         }
+    }
+
+    // --------------------------------------
+
+    public function visualUrl($id)
+    {
+
+
+        $url = Url::findOrFail($id);
+
+        Gate::authorize('update-url', $url);
+
+        $url->visible = !$url->visible;
+
+        $url->save();
+
+        return response()->json([
+            'id' => $url->id,
+            'visible' => $url->visible,
+            'message' => 'visibility status updated successfully'
+        ]);
+
+
     }
 }

@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('original_url');
             $table->string('code')->uniqid();
             $table->string('title');
+            $table->boolean('visible')->default(true);
             $table->softDeletes();
             $table->timestamps();
         });

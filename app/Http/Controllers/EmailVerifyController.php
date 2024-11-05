@@ -7,7 +7,10 @@ use Illuminate\Support\Facades\Cache;
 
 class EmailVerifyController extends Controller
 {
-    public function verify(Request $request)
+    
+    
+    
+    public function __invoke(Request $request)
     {
 
         $data = $request->validate([

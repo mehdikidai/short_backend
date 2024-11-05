@@ -14,7 +14,8 @@ class Url extends Model
         'user_id',
         'original_url',
         'code',
-        'title'
+        'title',
+        'visible'
     ];
 
     public function user()

@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Cache;
 
 class UrlRedirectController extends Controller
 {
-    
+
     public function __invoke(Request $request, $code)
     {
 
@@ -22,30 +22,25 @@ class UrlRedirectController extends Controller
 
         $browser = $agent->browser();
 
-        $device = match(true) {
+        $device = match (true) {
             $agent->isTablet() => 'tablet',
             $agent->isMobile() => 'mobile',
             default => 'desktop'
         };
 
-        if ($url) {
+        $new_click = Click::create([
+            'url_id' => $url->id,
+            'ip_address' => $request->ip(),
+            'browser' => $browser,
+            'device' => $device
+        ]);
 
-            $new_click = Click::create([
-                'url_id' => $url->id,
-                'ip_address' => $request->ip(),
-                'browser' => $browser,
-                'device' => $device
-            ]);
+        GetInfoIp::dispatch($new_click);
 
-            GetInfoIp::dispatch($new_click);
+        Cache::forget($url->user_id . '_number_of_visits');
 
-            Cache::forget($url->user_id . '_number_of_visits');
+        SocketEmit::dispatch('newVisit', $url->user_id);
 
-            SocketEmit::dispatch('newVisit', $url->user_id);
-
-            return redirect()->to($url->original_url);
-        }
-
-        abort(404);
+        return redirect()->to($url->original_url);
     }
 }
