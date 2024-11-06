@@ -38,7 +38,8 @@ return [
         'key' => env('TINIFY_API_KEY'),
     ],
     'socket' => [
-        'url' => env('SOCKET_IO_URL')
+        'url' => env('SOCKET_IO_URL'),
+        'key' => env('SOCKET_IO_KEY')
     ],
     'ip_api' => [
         'url' => env('IP_API_URL', 'http://ip-api.com/json'),

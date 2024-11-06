@@ -41,9 +41,11 @@ class SocketEmit implements ShouldQueue
 
         try {
 
-            $url = config("services.socket.url") . '/event';;
+            $url = config("services.socket.url") . '/event';
 
-            $response = Http::post($url, [
+            $key = config("services.socket.key");
+
+            $response = Http::withHeaders(['socket-key' => $key])->post($url, [
 
                 'event' => $this->event,
                 'id' => $this->id
@@ -53,13 +55,13 @@ class SocketEmit implements ShouldQueue
             if ($response->successful()) {
 
                 Log::info('socket io :' . $response);
+            } else {
 
+                Log::error('socket io error :' . $response);
             }
-
         } catch (Exception $e) {
 
             Log::error('socket error :' . $e->getMessage());
-
         }
     }
 }
