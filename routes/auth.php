@@ -6,7 +6,7 @@ use App\Http\Controllers\UserController;
 
 Route::controller(AuthController::class)->group(function () {
 
-	Route::post('/login', 'login')->middleware('throttle:3,10');
+	Route::post('/login', 'login')->middleware('throttle:5,10');
 
 	Route::post('/logout', 'logout')->middleware('auth:sanctum');
 

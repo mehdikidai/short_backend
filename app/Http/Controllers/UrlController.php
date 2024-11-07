@@ -9,15 +9,16 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\Role;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Cache;
-
+use Illuminate\Validation\Rule;
 
 class UrlController extends Controller
 {
 
 
-   
+
 
     /**
      * Display a listing of the resource.
@@ -30,7 +31,6 @@ class UrlController extends Controller
         if (!$user) {
 
             return response()->json(['message' => 'Unauthorized'], 401);
-
         }
 
         $urls = Url::where('user_id', $user->id)->orderBy('created_at', $sort)->paginate(6);
@@ -43,7 +43,6 @@ class UrlController extends Controller
 
 
         return response()->json($urls);
-
     }
 
     //---------------------------------------------------
@@ -93,7 +92,6 @@ class UrlController extends Controller
         $res = $url->restore();
 
         return response()->json(['success' => $res]);
-
     }
 
 
@@ -108,9 +106,14 @@ class UrlController extends Controller
     {
 
         $data = $request->validate([
-            'original_url' => 'required|url',
-            'title' => 'required|regex:/(^[A-Za-z][\w\s]{1,20}[A-Za-z]$)/'
-        ]);
+
+            'title' => 'required|regex:/(^[A-Za-z][\w\s]{1,20}[A-Za-z]$)/',
+
+            'original_url' => ['required', 'url', Rule::unique('urls')->where(function ($query) use ($request) {
+                return $query->where('user_id', $request->user()->id);
+            })]
+
+        ], ['original_url.unique' => 'You already have a URL.']);
 
 
         do {
@@ -239,7 +242,5 @@ class UrlController extends Controller
             'visible' => $url->visible,
             'message' => 'visibility status updated successfully'
         ]);
-
-
     }
 }
