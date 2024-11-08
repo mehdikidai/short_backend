@@ -36,8 +36,11 @@ class DeleteUnverifiedUsers implements ShouldQueue
         if ($user && $user->email_verified_at === null) {
 
             $user->delete();
+
         } else {
+
             Log::info($user->email);
+            
         }
     }
 }

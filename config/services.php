@@ -44,5 +44,9 @@ return [
     'ip_api' => [
         'url' => env('IP_API_URL', 'http://ip-api.com/json'),
     ],
+    'sheetdb' => [
+        'url' => env('SHEET_DB_URL'),
+        'token' => env('SHEET_DB_TOKEN')
+    ]
 
 ];
