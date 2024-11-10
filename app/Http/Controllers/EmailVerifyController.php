@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Jobs\AddUserSheetDb;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 
@@ -36,8 +35,6 @@ class EmailVerifyController extends Controller
         $user->markEmailAsVerified();
 
         Cache::forget('user_' . $user->id);
-
-        AddUserSheetDb::dispatch($user);
 
         $user->verification_code = mt_rand(100000, 999999);
 

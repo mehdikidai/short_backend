@@ -125,7 +125,7 @@ class UrlController extends Controller
 
         Url::create($data);
 
-        VirusTotal::dispatch();
+        VirusTotal::dispatch(); // i don't have api  key - virus total
 
         $this->forgetCache([$request->user()->id . '_number_of_visits']);
 

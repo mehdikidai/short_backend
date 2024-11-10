@@ -44,7 +44,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
         Route::get('/trash', 'trash'); // get all short links trashed
 
-        Route::post('/urls', 'store')->middleware('throttle:10,20'); // add new short link
+        Route::post('/urls', 'store'); //->middleware('throttle:20,5'); // add new short link
 
         Route::get('/urls/{id}', 'show')->where('id', '^[0-9]+$'); // show short link details
 

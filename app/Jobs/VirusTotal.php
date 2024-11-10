@@ -27,21 +27,8 @@ class VirusTotal implements ShouldQueue
      */
     public function handle(): void
     {
-        $response = Http::post('https://www.virustotal.com/vtapi/v2/url/scan', [
-            'apikey' => "b0c4f8892443a47c15b80ea3e2d75b2e4074782b46bbe3b6da1310840026d8e6",
-            'url' => "https://learnvue.co/articles/vue-emit-guide",
-        ]);
-
-        if ($response->successful()) {
-            Log::info('Scan successful', [
-                'status' => $response->status(),
-                'body' => $response->json(),
-            ]);
-        } else {
-            Log::error('Scan failed', [
-                'status' => $response->status(),
-                'body' => $response->body(),
-            ]);
-        }
+        
+            Log::info('virus total - i don\'t have api key');
+                
     }
 }
