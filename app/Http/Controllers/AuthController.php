@@ -89,7 +89,7 @@ class AuthController extends Controller
         $cachedCode = Cache::get('password_reset_' . $request->email);
 
         if (!$cachedCode || $cachedCode !== $request->code) {
-            return response()->json(['message' => 'الرمز غير صحيح أو انتهت صلاحيته.'], 400);
+            return response()->json(['message' => 'The code is expired.'], 400);
         }
 
         $user = User::where('email', $request->email)->first();
@@ -98,6 +98,6 @@ class AuthController extends Controller
 
         Cache::forget('password_reset_' . $request->email);
 
-        return response()->json(['message' => 'تم تحديث كلمة المرور بنجاح.']);
+        return response()->json(['message' => 'Successfully completed']);
     }
 }
