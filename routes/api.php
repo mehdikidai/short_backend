@@ -9,8 +9,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\EmailVerifyController;
 use App\Http\Controllers\ImageUploadController;
-
-
+use Illuminate\Support\Facades\Cache;
 
 Route::prefix('user')->middleware('auth:sanctum')->group(function () {
 
@@ -71,5 +70,26 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/analytics/{filter?}', [AnalyticsController::class, 'index']);
     Route::get('/locations/{filter?}', [AnalyticsController::class, 'showLocations']);
+
+});
+
+
+
+
+// Test if redis is working
+
+
+Route::get('/test',function(){
+
+    $user = Cache::remember('testUser',30,function(){
+
+        sleep(10);
+
+        return 'mehdi';
+
+    });
+
+    return response()->json(['name'=>$user]);
+
 
 });
