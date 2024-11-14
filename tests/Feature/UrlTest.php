@@ -113,7 +113,6 @@ describe('TEST URLS', function () {
         $response->assertStatus(200);
 
         $user->forceDelete();
-
     });
 
     //----------------------------- remove short link - force delete
@@ -129,7 +128,6 @@ describe('TEST URLS', function () {
         $response->assertStatus(200);
 
         $user->forceDelete();
-
     });
 
     //---------------------------- get all short links trashed
@@ -143,7 +141,6 @@ describe('TEST URLS', function () {
         $response->assertStatus(200);
 
         $user->forceDelete();
-
     });
 
     // --------------------------- show short link details
@@ -154,12 +151,11 @@ describe('TEST URLS', function () {
 
         $url = Url::factory()->create(['user_id' => $user->id]);
 
-        $response = $this->withHeaders(['Authorization' => "Bearer $token"])->getJson('/api/urls/'.$url->id);
+        $response = $this->withHeaders(['Authorization' => "Bearer $token"])->getJson('/api/urls/' . $url->id);
 
         $response->assertStatus(200);
 
         $user->forceDelete();
-
     });
 
     // ---------------------------- show short link details - 404 - Not found
@@ -173,7 +169,6 @@ describe('TEST URLS', function () {
         $response->assertStatus(404);
 
         $user->forceDelete();
-
     });
 
     // -------------------------- Show short link details - 403 - Not owner
@@ -181,25 +176,19 @@ describe('TEST URLS', function () {
     it('Show short link details 403 - Not owner', function () {
 
         [$user, $token] = Helper::createAuthenticatedUser();
-        
+
         $userTwo = User::factory()->create();
 
         $url = Url::factory()->create([
             'user_id' => $userTwo->id
         ]);
-    
+
         $response = $this->withHeaders(['Authorization' => "Bearer $token"])->getJson('/api/urls/' . $url->id);
-    
+
         $response->assertStatus(403);
-    
+
         $user->forceDelete();
-        
+
         $userTwo->forceDelete();
-
     });
-
-
-
-
-
 })->group('url');

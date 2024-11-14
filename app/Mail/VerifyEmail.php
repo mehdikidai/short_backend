@@ -42,7 +42,7 @@ class VerifyEmail extends Mailable
     {
         return new Content(
             view: 'vmail',
-            with:[
+            with: [
                 'code' => $this->code,
                 'name' => $this->name,
             ]

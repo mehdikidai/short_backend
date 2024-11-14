@@ -84,7 +84,6 @@ Route::get('/test',function(){
     $user = Cache::remember('testUser',30,function(){
 
         sleep(10);
-
         return 'mehdi';
 
     });
