@@ -6,6 +6,7 @@ use App\Models\Url;
 use App\Models\Click;
 use App\Jobs\GetInfoIp;
 use App\Jobs\SocketEmit;
+use App\Models\User;
 use Jenssegers\Agent\Agent;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -17,6 +18,8 @@ class UrlRedirectController extends Controller
     {
 
         $url = Url::where('code', $code)->first();
+
+        $user = User::findOrFail($url->user_id);
 
         $agent = new Agent();
 
@@ -37,10 +40,11 @@ class UrlRedirectController extends Controller
 
         GetInfoIp::dispatch($new_click);
 
-        Cache::forget($url->user_id . '_number_of_visits');
+        Cache::forget((string) $url->id . '_number_of_visits');
 
-        SocketEmit::dispatch('newVisit', $url->user_id);
+        SocketEmit::dispatch('newVisit', $user->socket_room);
 
         return redirect()->to($url->original_url);
+
     }
 }

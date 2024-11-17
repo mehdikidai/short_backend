@@ -35,12 +35,10 @@ class GetInfoIp implements ShouldQueue
     public function handle(): void
     {
 
-        //Log::info("ip :$this->ip and id:$this->id");
-
         $apiUrl = config('services.ip_api.url', 'http://ip-api.com/json');
 
         if (App::environment('local')) {
-            $this->ip = '88.244.12.34'; 
+            $this->ip = '160.177.4.74';
         }
 
         $response = Http::get("$apiUrl/{$this->ip}");
@@ -60,7 +58,7 @@ class GetInfoIp implements ShouldQueue
                 $click->save();
             }
         } else {
-            Log::error("Failed to get IP information for: {$this->ip}");
+            Log::error("Failed IP information for: {$this->ip}");
         }
     }
 }

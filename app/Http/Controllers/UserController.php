@@ -6,12 +6,13 @@ use Carbon\Carbon;
 use App\Models\Role;
 use App\Models\User;
 use App\Jobs\SendEmailJob;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Traits\CodeVerification;
 use App\Jobs\DeleteUnverifiedUsers;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Gate;
 
 class UserController extends Controller
 {
@@ -45,6 +46,7 @@ class UserController extends Controller
             'password' => Hash::make($data['password']),
             'name' => $data['name'],
             'verification_code' => $v_code,
+            'socket_room' => Str::random(32)
         ]);
 
         DeleteUnverifiedUsers::dispatch($user->id)->delay(Carbon::now()->addHours(24));

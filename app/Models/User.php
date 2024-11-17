@@ -3,12 +3,14 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Models\Url;
+use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
-use App\Models\Url;
-use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class User extends Authenticatable
 {
@@ -24,6 +26,9 @@ class User extends Authenticatable
         'email',
         'password',
         'verification_code',
+        'socket_room',
+        'photo'
+
     ];
 
     /**
@@ -34,7 +39,8 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
-        'verification_code'
+        'verification_code',
+
     ];
 
     /**
@@ -52,14 +58,14 @@ class User extends Authenticatable
 
     // @urls
 
-    public function urls()
+    public function urls(): HasMany
     {
         return $this->hasMany(Url::class);
     }
 
     // @roles 
 
-    public function roles()
+    public function roles(): BelongsToMany
     {
         return $this->belongsToMany(Role::class);
     }

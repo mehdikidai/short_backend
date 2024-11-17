@@ -34,7 +34,7 @@ class SendEmailJob implements ShouldQueue
      */
     public function handle(): void
     {
-        Log::info('Code :' . $this->v_code . ' To Email :' . $this->email);
+        Log::info("Code: {$this->v_code} | Email: {$this->email}");
         Mail::to($this->email)->send(new VerifyEmail($this->name, $this->v_code));
     }
 }

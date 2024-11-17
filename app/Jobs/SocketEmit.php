@@ -18,16 +18,16 @@ class SocketEmit implements ShouldQueue
     use Queueable;
 
 
-    protected $id;
+    protected $room;
 
     protected $event;
 
     /**
      * Create a new job instance.
      */
-    public function __construct($event, $id)
+    public function __construct($event, $room)
     {
-        $this->id = $id;
+        $this->room = $room;
 
         $this->event = $event;
     }
@@ -48,16 +48,16 @@ class SocketEmit implements ShouldQueue
             $response = Http::withHeaders(['socket-key' => $key])->post($url, [
 
                 'event' => $this->event,
-                'id' => $this->id
+                'room' => $this->room
 
             ]);
 
             if ($response->successful()) {
 
-                Log::info('socket io :' . $response);
+                Log::info((string) 'socket io :' . $response);
             } else {
 
-                Log::error('socket io error :' . $response);
+                Log::error((string) 'socket io error :' . $response);
             }
         } catch (Exception $e) {
 

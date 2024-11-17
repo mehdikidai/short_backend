@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Click extends Model
 {
@@ -18,7 +19,7 @@ class Click extends Model
         'device'
     ];
 
-    public function url()
+    public function url(): BelongsTo
     {
         return $this->belongsTo(URL::class);
     }
