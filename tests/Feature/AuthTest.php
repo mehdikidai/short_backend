@@ -180,7 +180,7 @@ describe('TEST AUTH', function () {
 
         [$user, $token] = Helper::createAuthenticatedUser();
 
-        $response = $this->withHeaders(['Authorization' => "Bearer $token"])->putJson('/api/user/upadete-password',[
+        $response = $this->withHeaders(['Authorization' => "Bearer $token"])->putJson('/api/user/update-password',[
             "currentPassword" => "password",
             "newPassword" => "12345678",
         ]);
@@ -198,7 +198,7 @@ describe('TEST AUTH', function () {
 
         [$user, $token] = Helper::createAuthenticatedUser();
 
-        $response = $this->withHeaders(['Authorization' => "Bearer $token"])->putJson('/api/user/upadete-password',[
+        $response = $this->withHeaders(['Authorization' => "Bearer $token"])->putJson('/api/user/update-password',[
             "currentPassword" => "password111",
             "newPassword" => "12345678",
         ]);

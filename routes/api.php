@@ -2,31 +2,34 @@
 
 require __DIR__ . "/auth.php";
 
-use App\Http\Controllers\AnalyticsController;
+use App\Enums\FilterType;
+use App\Enums\SortUrlEnum;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UrlController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\SearchController;
+use App\Http\Controllers\AnalyticsController;
 use App\Http\Controllers\EmailVerifyController;
 use App\Http\Controllers\ImageUploadController;
-use Illuminate\Support\Facades\Cache;
 
-Route::prefix('user')->middleware('auth:sanctum')->group(function () {
 
+Route::prefix('user')->middleware('auth:sanctum')->group(function (): void {
 
     Route::controller(UserController::class)->group(function () {
 
-        Route::get('/', 'user'); // user informations
+        Route::get('/', 'user'); // user information's
 
         Route::get('/users', 'users')->middleware(['role:admin']); // get all users - admin
 
         Route::put('/', 'update'); // update name - email
 
-        Route::put('/upadete-password', 'updatePassword'); // change password
+        Route::put('/update-password', 'updatePassword'); // change password
 
         Route::delete('/account', 'deleteAccount'); // remove account - user
 
-        Route::delete('/{id}', 'destroy')->where('id', '^[0-9]+$'); // remove user account - admin
+        Route::delete('/{id}', 'destroy'); // remove user account - admin
 
     });
 });
@@ -35,29 +38,30 @@ Route::prefix('user')->middleware('auth:sanctum')->group(function () {
 Route::post('/upload_photo_profile', ImageUploadController::class)->middleware('auth:sanctum');
 
 
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware('auth:sanctum')->group(function (): void {
 
-    Route::controller(UrlController::class)->group(function () {
+    Route::controller(UrlController::class)->group(function (): void {
 
-        Route::get('/urls/{sort?}', 'index')->where('sort', 'desc|asc'); // get all short links
+        Route::get('/urls/{sort?}', 'index')->whereIn('sort', SortUrlEnum::cases()); // get all short links
 
         Route::get('/trash', 'trash'); // get all short links trashed
 
-        Route::post('/urls', 'store'); //->middleware('throttle:20,5'); // add new short link
+        Route::post('/urls', 'store')->middleware('throttle:20,5'); // add new short link
 
-        Route::get('/urls/{id}', 'show')->where('id', '^[0-9]+$'); // show short link details
+        Route::get('/urls/{id}', 'show'); // show short link details
 
-        Route::put('/urls/{id}', 'update')->where('id', '^[0-9]+$'); // update short link
+        Route::put('/urls/{id}', 'update'); // update short link
 
-        Route::put('/urls/{id}/visual', 'visualUrl')->where('id', '^[0-9]+$');
+        Route::put('/urls/{id}/visual', 'visualUrl');
 
-        Route::patch('/restore_url/{id}', 'restoreUrl')->where('id', '^[0-9]+$'); // restore short link from trash
+        Route::patch('/restore_url/{id}', 'restoreUrl'); // restore short link from trash
 
-        Route::delete('/force_delete_url/{id}', 'forceDeleteUrl')->where('id', '^[0-9]+$'); // remove short link
+        Route::delete('/force_delete_url/{id}', 'forceDeleteUrl'); // remove short link
 
-        Route::delete('/urls/{id}', 'destroy')->where('id', '^[0-9]+$'); // move short link to trash
+        Route::delete('/urls/{id}', 'destroy'); // move short link to trash
 
     });
+
 
     Route::post('/email/verify', EmailVerifyController::class)->middleware('throttle:5,15');
 
@@ -66,10 +70,11 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 
 
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware('auth:sanctum')->controller(AnalyticsController::class)->group(function (): void {
 
-    Route::get('/analytics/{filter?}', [AnalyticsController::class, 'index']);
-    Route::get('/locations/{filter?}', [AnalyticsController::class, 'showLocations']);
+    Route::get('/analytics/{filter?}', 'index')->whereIn('filter', FilterType::cases());
+    
+    Route::get('/locations/{filter?}', 'showLocations')->whereIn('filter', FilterType::cases());
 
 });
 
@@ -79,16 +84,17 @@ Route::middleware('auth:sanctum')->group(function () {
 // Test if redis is working
 
 
-Route::get('/test',function(){
+Route::get('/test', function (): JsonResponse {
 
-    $user = Cache::remember('testUser',30,function(){
 
-        sleep(10);
+    $user = Cache::remember('testUser', 20, function (): string {
+
+        sleep(5);
         return 'mehdi';
 
     });
 
-    return response()->json(['name'=>$user]);
+    return response()->json(['name' => $user]);
 
 
 });

@@ -41,8 +41,8 @@ class UrlController extends Controller
             return $url;
         });
 
-
         return response()->json($urls);
+        
     }
 
     //---------------------------------------------------

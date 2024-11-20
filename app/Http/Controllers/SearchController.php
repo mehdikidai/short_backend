@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Jobs\SocketEmit;
 use App\Models\Url;
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 
 
 class SearchController extends Controller
 {
-    public function __invoke(Request $request)
+    public function __invoke(Request $request): JsonResponse
     {
 
 
@@ -24,7 +24,7 @@ class SearchController extends Controller
             })
             ->latest()
             ->limit(12)
-            ->get(['id','title','original_url']);
+            ->get(['id', 'title', 'original_url']);
 
 
         return response()->json($results);
