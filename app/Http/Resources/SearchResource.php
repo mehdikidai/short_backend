@@ -17,7 +17,7 @@ class SearchResource extends JsonResource
         return [
             "id" => $this->id,
             "title" => $this->title,
-            "originalUrl" => $this->original_url
+            "originalUrl" => $this->original_url,
         ];
     }
 }
