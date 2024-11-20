@@ -47,7 +47,7 @@ The project is built using **Laravel** for the backend and **Vue.js** for the fr
 ### Setup Steps
 1. **Clone the repository**:
    ```bash
-   git clone <repository-link>
+   git clone https://github.com/mehdikidai/short_backend.git
    ```
 
 2. **Install dependencies**:
@@ -81,9 +81,8 @@ The project is built using **Laravel** for the backend and **Vue.js** for the fr
      ```bash
      php artisan serve
      ```
-   - For Vue.js:
      ```bash
-     npm run dev
+     php artisan queue:work
      ```
 
 ---
