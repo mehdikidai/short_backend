@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\SearchResource;
 use App\Models\Url;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
@@ -11,7 +12,6 @@ class SearchController extends Controller
 {
     public function __invoke(Request $request): JsonResponse
     {
-
 
         $query = $request->input('query');
         $userId = $request->user()->id;
@@ -24,9 +24,10 @@ class SearchController extends Controller
             })
             ->latest()
             ->limit(12)
-            ->get(['id', 'title', 'original_url']);
+            ->get();
 
 
-        return response()->json($results);
+        return response()->json(SearchResource::collection($results));
+        
     }
 }
