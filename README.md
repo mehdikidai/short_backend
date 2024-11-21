@@ -122,7 +122,7 @@ The project is built using **Laravel** for the backend and **Vue.js** for the fr
 Provide detailed documentation for each endpoint, including:
 - **Authentication**: `/api/login`, `/api/register`.
 - **URL Management**: `/api/urls`, `/api/urls/{id}`.
-- **Statistics**: `/api/urls/{id}/stats`.
+- **Statistics**: `/api/urls/{id}`.
 
 ### Service Setup
 - Configure **Google Maps API** for geolocation.
