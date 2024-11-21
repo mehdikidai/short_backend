@@ -73,7 +73,7 @@ Route::middleware('auth:sanctum')->group(function (): void {
 Route::middleware('auth:sanctum')->controller(AnalyticsController::class)->group(function (): void {
 
     Route::get('/analytics/{filter?}', 'index')->whereIn('filter', FilterType::cases());
-    
+
     Route::get('/locations/{filter?}', 'showLocations')->whereIn('filter', FilterType::cases());
 
 });
@@ -82,19 +82,16 @@ Route::middleware('auth:sanctum')->controller(AnalyticsController::class)->group
 
 
 // Test if redis is working
-
-
 Route::get('/test', function (): JsonResponse {
-
 
     $user = Cache::remember('testUser', 20, function (): string {
 
         sleep(5);
-        return 'mehdi';
 
+        return 'mehdi';
+        
     });
 
     return response()->json(['name' => $user]);
-
 
 });
