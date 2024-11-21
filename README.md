@@ -97,7 +97,7 @@ The project is built using **Laravel** for the backend and **Vue.js** for the fr
 ### Creating Shortened Links
 - Enter the original URL in the input field.
 - Optionally customize the link.
-- Set the link's visibility (public/private).
+- Set the link's visibility.
 
 ### Viewing Statistics
 - View details of link visits, such as:
