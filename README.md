@@ -124,10 +124,6 @@ Provide detailed documentation for each endpoint, including:
 - **URL Management**: `/api/urls`, `/api/urls/{id}`.
 - **Statistics**: `/api/urls/{id}`.
 
-### Service Setup
-- Configure **Google Maps API** for geolocation.
-- Add any other third-party integrations.
-
 ---
 
 ## Database Schema
