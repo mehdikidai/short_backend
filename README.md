@@ -36,6 +36,7 @@ Ensure you have the following installed:
 - A relational database (e.g., MySQL).
 
 ## Setup Steps
+---
 ### Backend (Laravel)
 1. **Clone the repository**:
 ```bash
@@ -65,6 +66,7 @@ php artisan migrate --seed
 php artisan serve
 php artisan queue:work
 ```
+---
 ### WebSocket (Node.js - Express.js/Socket.IO)
 1. **Clone the repository**:
 ```bash
@@ -79,6 +81,7 @@ npm install
 ```bash
 npm run dev
 ```
+---
 ### Frontend (Vue.js)
 1. **Clone the repository**:
 ```bash
