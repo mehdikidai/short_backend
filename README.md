@@ -44,7 +44,7 @@ The project is built using **Laravel** for the backend and **Vue.js** for the fr
 - **Node.js** (for Vue.js).
 - A database (e.g., MySQL).
 
-### Setup Steps
+### Setup Steps Backend - laravel
 1. **Clone the repository**:
    ```bash
    git clone https://github.com/mehdikidai/short_backend.git
@@ -54,10 +54,6 @@ The project is built using **Laravel** for the backend and **Vue.js** for the fr
    - For Laravel:
      ```bash
      composer install
-     ```
-   - For Vue.js:
-     ```bash
-     npm install
      ```
 
 3. **Configure the environment**:
@@ -83,6 +79,21 @@ The project is built using **Laravel** for the backend and **Vue.js** for the fr
      ```
      ```bash
      php artisan queue:work
+     ```
+
+### Setup Steps Frontend - vue js
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/mehdikidai/short_frontend.git
+   ```
+
+2. **Install dependencies**:
+   - npm install:
+     ```bash
+     npm install
+     ```
+     ```bash
+     npm run dev
      ```
 
 ---
