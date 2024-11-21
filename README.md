@@ -137,24 +137,3 @@ Provide detailed documentation for each endpoint, including:
 7. **personal_access_tokens**: Handles API tokens.
 
 (Include diagrams or SQL examples as needed.)
-
----
-
-## FAQ
-- **How can I edit a shortened link?**
-  Navigate to the link management section and click "Edit".
-- **What should I do if I encounter an error?**
-  Check the application logs or contact support.
-
----
-
-## Contributions
-Contributions are welcome! Follow these steps to contribute:
-1. Fork the repository.
-2. Create a feature branch:
-   ```bash
-   git checkout -b feature-name
-   ```
-3. Commit your changes and create a pull request.
-
----
