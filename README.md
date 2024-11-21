@@ -88,10 +88,12 @@ The project is built using **Laravel** for the backend and **Vue.js** for the fr
    ```
 
 2. **Install dependencies**:
-   - npm install:
+   - Install dependencie:
      ```bash
      npm install
      ```
+3. **Run the development servers**:
+   - Run the development servers:
      ```bash
      npm run dev
      ```
