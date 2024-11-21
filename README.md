@@ -35,8 +35,8 @@ Ensure you have the following installed:
 - **Node.js** (for managing Vue.js dependencies).
 - A relational database (e.g., MySQL).
 
-### Setup Steps
-#### Backend (Laravel)
+## Setup Steps
+### Backend (Laravel)
 1. **Clone the repository**:
 ```bash
 git clone https://github.com/mehdikidai/short_backend.git
@@ -65,7 +65,7 @@ php artisan migrate --seed
 php artisan serve
 php artisan queue:work
 ```
-#### WebSocket (Node.js - Express.js/Socket.IO)
+### WebSocket (Node.js - Express.js/Socket.IO)
 1. **Clone the repository**:
 ```bash
 git clone https://github.com/mehdikidai/socket_io.git
@@ -79,7 +79,7 @@ npm install
 ```bash
 npm run dev
 ```
-#### Frontend (Vue.js)
+### Frontend (Vue.js)
 1. **Clone the repository**:
 ```bash
 git clone https://github.com/mehdikidai/short_frontend.git
