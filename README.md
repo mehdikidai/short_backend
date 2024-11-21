@@ -76,7 +76,6 @@ cd socket_io
 npm install
 ```
 3. **Start the server**:
-
 ```bash
 npm run dev
 ```
