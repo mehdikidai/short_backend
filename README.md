@@ -132,7 +132,7 @@ The project is built using **Laravel** for the backend and **Vue.js** for the fr
 ### Viewing Statistics
 - View details of link visits, such as:
   - Country, city, and coordinates.
-  - Device type (mobile/desktop).
+  - Device type (mobile/desktop/tablette).
   - Browser information.
 
 ### Generating QR Codes
