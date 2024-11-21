@@ -81,6 +81,23 @@ The project is built using **Laravel** for the backend and **Vue.js** for the fr
      php artisan queue:work
      ```
 
+### Setup Steps websocket - node js (express js / socket io)
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/mehdikidai/socket_io.git
+   ```
+
+2. **Install dependencies**:
+   - Install dependencie:
+     ```bash
+     npm install
+     ```
+3. **Run the development servers**:
+   - Run the development servers:
+     ```bash
+     npm run dev
+     ```
+
 ### Setup Steps Frontend - vue js
 1. **Clone the repository**:
    ```bash
