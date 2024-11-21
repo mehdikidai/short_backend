@@ -222,3 +222,5 @@ php artisan queue:restart
    - Yes, you can select colors before generating the QR code.
 3. **What browsers are supported?**
    - Modern browsers like Chrome, Firefox, Safari, and Edge.
+4. **What languages are supported?**
+   - The application supports Arabic, French, English, Spanish, and German.
