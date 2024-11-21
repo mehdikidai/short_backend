@@ -115,7 +115,6 @@ The project is built using **Laravel** for the backend and **Vue.js** for the fr
 
 ### Project Structure
 - **/app**: Contains backend logic (models, controllers).
-- **/resources**: Frontend assets (Vue.js components).
 - **/database**: Migrations and seeders.
 - **/routes**: API and web route definitions.
 
