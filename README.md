@@ -140,15 +140,6 @@ Provide detailed documentation for each endpoint, including:
 
 ---
 
-## Maintenance
-- **Backup Database**: Regularly back up your database.
-- **Run Scheduled Tasks**:
-  ```bash
-  php artisan schedule:run
-  ```
-
----
-
 ## FAQ
 - **How can I edit a shortened link?**
   Navigate to the link management section and click "Edit".
