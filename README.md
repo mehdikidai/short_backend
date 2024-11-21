@@ -1,169 +1,175 @@
-
 # ziplink Documentation
-
 ## Table of Contents
-- [ziplink Documentation](#ziplink-documentation)
-	- [Table of Contents](#table-of-contents)
-	- [Introduction](#introduction)
-	- [Installation](#installation)
-		- [Requirements](#requirements)
-		- [Setup Steps](#setup-steps)
-	- [User Guide](#user-guide)
-		- [Account Management](#account-management)
-		- [Creating Shortened Links](#creating-shortened-links)
-		- [Viewing Statistics](#viewing-statistics)
-		- [Generating QR Codes](#generating-qr-codes)
-	- [Developer Guide](#developer-guide)
-		- [Project Structure](#project-structure)
-		- [API Endpoints](#api-endpoints)
-		- [Service Setup](#service-setup)
-	- [Database Schema](#database-schema)
-		- [Tables](#tables)
-	- [Maintenance](#maintenance)
-	- [FAQ](#faq)
-	- [Contributions](#contributions)
+- [Introduction](#introduction)
+- [Installation](#installation)
+- [Requirements](#requirements)
+- [Setup Steps](#setup-steps)
+- [Backend (Laravel)](#setup-steps-backend---laravel)
+- [WebSocket (Node.js -
+Express.js/Socket.IO)](#setup-steps-websocket---node-js-express-js--socket-io)
+- [Frontend (Vue.js)](#setup-steps-frontend---vue-js)
+- [User Guide](#user-guide)
+- [Account Management](#account-management)
+- [Creating Shortened Links](#creating-shortened-links)
+- [Viewing Statistics](#viewing-statistics)
+- [Generating QR Codes](#generating-qr-codes)
+- [Developer Guide](#developer-guide)
+- [Project Structure](#project-structure)
+- [API Endpoints](#api-endpoints)
+- [Database Schema](#database-schema)
+- [Tables](#tables)
+- [Maintenance](#maintenance)
+- [FAQ](#faq)
+- [Contributions](#contributions)
 
 ---
-
 ## Introduction
-**ziplink** is a powerful URL-shortening application that allows users to:
-- Generate and manage shortened links.
+**ziplink** is a robust URL-shortening application that empowers users to:
+- Generate and manage shortened URLs.
 - Create customizable QR codes.
-- View detailed statistics on visits, including location and device type.
-- Manage user accounts.
-
-The project is built using **Laravel** for the backend and **Vue.js** for the frontend.
-
+- Analyze detailed statistics on visits, including location and device type.
+- Manage user accounts securely.
+This project leverages **Laravel** for the backend and **Vue.js** for the frontend, ensuring
+scalability and a seamless user experience.
 ---
-
 ## Installation
-
 ### Requirements
+Ensure you have the following installed:
 - **PHP** 8.2 or later.
-- **Composer**.
-- **Node.js** (for Vue.js).
-- A database (e.g., MySQL).
+- **Composer** (Dependency Manager for PHP).
+- **Node.js** (for managing Vue.js dependencies).
+- A relational database (e.g., MySQL).
 
-### Setup Steps Backend - laravel
+### Setup Steps
+#### Backend (Laravel)
 1. **Clone the repository**:
-   ```bash
-   git clone https://github.com/mehdikidai/short_backend.git
-   ```
-
+```bash
+git clone https://github.com/mehdikidai/short_backend.git
+cd short_backend
+```
 2. **Install dependencies**:
-   - For Laravel:
-     ```bash
-     composer install
-     ```
-
-3. **Configure the environment**:
-   - Copy the example `.env` file and set the required variables:
-     ```bash
-     cp .env.example .env
-     ```
-
-4. **Generate the application key**:
-   ```bash
-   php artisan key:generate
-   ```
-
-5. **Run migrations and seed the database**:
-   ```bash
-   php artisan migrate --seed
-   ```
-
-6. **Run the development servers**:
-   - For Laravel:
-     ```bash
-     php artisan serve
-     ```
-     ```bash
-     php artisan queue:work
-     ```
-
-### Setup Steps websocket - node js (express js / socket io)
+```bash
+composer install
+```
+3. **Set up the environment**:
+- Copy the example `.env` file:
+```bash
+cp .env.example .env
+```
+- Update database credentials and other configurations in the `.env` file.
+4. **Generate application key**:
+```bash
+php artisan key:generate
+```
+5. **Run migrations and seed data**:
+```bash
+php artisan migrate --seed
+```
+6. **Start services**:
+```bash
+php artisan serve
+php artisan queue:work
+```
+#### WebSocket (Node.js - Express.js/Socket.IO)
 1. **Clone the repository**:
-   ```bash
-   git clone https://github.com/mehdikidai/socket_io.git
-   ```
-
+```bash
+git clone https://github.com/mehdikidai/socket_io.git
+cd socket_io
+```
 2. **Install dependencies**:
-   - Install dependencie:
-     ```bash
-     npm install
-     ```
-3. **Run the development servers**:
-   - Run the development servers:
-     ```bash
-     npm run dev
-     ```
+```bash
+npm install
+```
+3. **Start the server**:
 
-### Setup Steps Frontend - vue js
+```bash
+npm run dev
+```
+#### Frontend (Vue.js)
 1. **Clone the repository**:
-   ```bash
-   git clone https://github.com/mehdikidai/short_frontend.git
-   ```
-
+```bash
+git clone https://github.com/mehdikidai/short_frontend.git
+cd short_frontend
+```
 2. **Install dependencies**:
-   - Install dependencie:
-     ```bash
-     npm install
-     ```
-3. **Run the development servers**:
-   - Run the development servers:
-     ```bash
-     npm run dev
-     ```
-
+```bash
+npm install
+```
+3. **Run the development server**:
+```bash
+npm run dev
+```
 ---
-
 ## User Guide
 
 ### Account Management
-- **Sign Up**: Create an account using an email address.
-- **Log In**: Access your account using your email and password.
-- **Reset Password**: Recover access using the password reset feature.
-
+- **Sign Up**: Register a new account using an email address and password.
+- **Log In**: Access your account securely.
+- **Reset Password**: Use the "Forgot Password" feature to recover access.
 ### Creating Shortened Links
-- Enter the original URL in the input field.
-- Optionally customize the link.
-- Set the link's visibility.
-
+1. Input the original URL into the form.
+2. Optionally customize the alias for your link.
+3. Set visibility preferences (e.g., public or private).
 ### Viewing Statistics
-- View details of link visits, such as:
-  - Country, city, and coordinates.
-  - Device type (mobile/desktop/tablette).
-  - Browser information.
-
+Gain insights into your shortened URLs:
+- View geographic details (country, city, and coordinates).
+- Analyze device usage (mobile, desktop, or tablet).
+- Check browser types.
 ### Generating QR Codes
-- Customize QR code colors.
-- Download the QR code as an image.
-
+1. Customize QR code colors to match your branding.
+2. Download the QR code as an image for sharing.
 ---
-
 ## Developer Guide
-
 ### Project Structure
-- **/app**: Contains backend logic (models, controllers).
-- **/database**: Migrations and seeders.
-- **/routes**: API and web route definitions.
 
+- **Backend**:
+- `/app`: Business logic (models, controllers).
+- `/database`: Migrations and seeders for data management.
+- `/routes`: API and web route definitions.
+- **Frontend**:
+- `/src`: Vue.js components and utilities.
+- `/assets`: Static files like images and styles.
 ### API Endpoints
-Provide detailed documentation for each endpoint, including:
-- **Authentication**: `/api/login`, `/api/register`.
-- **URL Management**: `/api/urls`, `/api/urls/{id}`.
-- **Statistics**: `/api/urls/{id}`.
-
+Detailed documentation for backend endpoints:
+- **Authentication**:
+- `POST /api/login`: User login.
+- `POST /api/register`: User registration.
+- **URL Management**:
+- `GET /api/urls`: Fetch all URLs.
+- `POST /api/urls`: Create a new shortened URL.
+- `DELETE /api/urls/{id}`: Delete a URL.
+- **Statistics**:
+- `GET /api/urls/{id}/stats`: Fetch visit statistics for a specific URL.
 ---
-
 ## Database Schema
 ### Tables
-1. **users**: Manages user information.
-2. **urls**: Stores shortened URLs and associated data.
-3. **clicks**: Tracks click details, such as location and device type.
-4. **roles**: Defines user roles (e.g., admin, user).
-5. **role_user**: Links roles to users.
-6. **sessions**: Tracks active user sessions.
-7. **personal_access_tokens**: Handles API tokens.
 
-(Include diagrams or SQL examples as needed.)
+1. **users**: Handles user information (e.g., name, email, password, profile photo).
+2. **urls**: Stores original and shortened URLs with metadata.
+3. **clicks**: Tracks link clicks with details like:
+- IP address.
+- Country, city, and coordinates.
+- Browser and device type.
+4. **roles**: Defines user roles (admin, regular user).
+5. **role_user**: Links roles to users (many-to-many relationship).
+6. **sessions**: Tracks user session activity.
+7. **personal_access_tokens**: Manages API tokens for secure access.
+---
+## Maintenance
+- **Clear Cache**:
+```bash
+php artisan cache:clear
+```
+- **Queue Management**:
+```bash
+php artisan queue:restart
+```
+- **Database Backups**: Use tools like `mysqldump` or Laravel backups.
+---
+## FAQ
+1. **How do I reset my password?**
+- Use the "Forgot Password" option on the login page.
+2. **Can I customize QR codes?**
+- Yes, you can select colors before generating the QR code.
+3. **What browsers are supported?**
+- Modern browsers like Chrome, Firefox, Safari, and Edge.
