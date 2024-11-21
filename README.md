@@ -104,7 +104,6 @@ The project is built using **Laravel** for the backend and **Vue.js** for the fr
   - Country, city, and coordinates.
   - Device type (mobile/desktop).
   - Browser information.
-- Export statistics as needed.
 
 ### Generating QR Codes
 - Customize QR code colors.
