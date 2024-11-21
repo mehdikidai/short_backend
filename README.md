@@ -2,175 +2,225 @@
 # ziplink Documentation
 
 ## Table of Contents
-- [ziplink Documentation](#ziplink-documentation)
-	- [Table of Contents](#table-of-contents)
-	- [Introduction](#introduction)
-	- [Installation](#installation)
-		- [Requirements](#requirements)
-		- [Setup Steps](#setup-steps)
-	- [User Guide](#user-guide)
-		- [Account Management](#account-management)
-		- [Creating Shortened Links](#creating-shortened-links)
-		- [Viewing Statistics](#viewing-statistics)
-		- [Generating QR Codes](#generating-qr-codes)
-	- [Developer Guide](#developer-guide)
-		- [Project Structure](#project-structure)
-		- [API Endpoints](#api-endpoints)
-		- [Service Setup](#service-setup)
-	- [Database Schema](#database-schema)
-		- [Tables](#tables)
-	- [Maintenance](#maintenance)
-	- [FAQ](#faq)
-	- [Contributions](#contributions)
+- [Introduction](#introduction)
+- [Installation](#installation)
+- [Requirements](#requirements)
+- [Setup Steps](#setup-steps)
+- [User Guide](#user-guide)
+- [Account Management](#account-management)
+- [Creating Shortened Links](#creating-shortened-links)
+- [Viewing Statistics](#viewing-statistics)
+- [Generating QR Codes](#generating-qr-codes)
+- [Developer Guide](#developer-guide)
+- [Project Structure](#project-structure)
+- [API Endpoints](#api-endpoints)
+- [Database Schema](#database-schema)
+- [Tables](#tables)
+- [Maintenance](#maintenance)
+- [FAQ](#faq)
 
 ---
 
 ## Introduction
-**ziplink** is a powerful URL-shortening application that allows users to:
-- Generate and manage shortened links.
-- Create customizable QR codes.
-- View detailed statistics on visits, including location and device type.
-- Manage user accounts.
 
-The project is built using **Laravel** for the backend and **Vue.js** for the frontend.
+**ziplink** is a robust URL-shortening application that empowers users to:
+- Generate and manage shortened URLs.
+- Create customizable QR codes.
+- Analyze detailed statistics on visits, including location and device type.
+- Manage user accounts securely.
+
+This project leverages **Laravel** for the backend and **Vue.js** for the frontend, ensuring scalability and a seamless user experience.
 
 ---
 
 ## Installation
 
 ### Requirements
+Ensure you have the following installed:
 - **PHP** 8.2 or later.
-- **Composer**.
-- **Node.js** (for Vue.js).
-- A database (e.g., MySQL).
+- **Composer** (Dependency Manager for PHP).
+- **Node.js** (for managing Vue.js dependencies).
+- A relational database (e.g., MySQL).
 
 ### Setup Steps
+
+#### Backend (Laravel)
 1. **Clone the repository**:
-   ```bash
-   git clone <repository-link>
-   ```
-
+```bash
+git clone https://github.com/mehdikidai/short_backend.git
+cd short_backend
+```
 2. **Install dependencies**:
-   - For Laravel:
-     ```bash
-     composer install
-     ```
-   - For Vue.js:
-     ```bash
-     npm install
-     ```
-
-3. **Configure the environment**:
-   - Copy the example `.env` file and set the required variables:
+```bash
+composer install
+```
+3. **Set up the environment**:
+   - Copy the example `.env` file:
      ```bash
      cp .env.example .env
      ```
+   - Update database credentials and other configurations in the `.env` file.
+4. **Generate application key**:
+```bash
+php artisan key:generate
+```
+5. **Run migrations and seed data**:
+```bash
+php artisan migrate --seed
+```
+6. **Start services**:
+```bash
+php artisan serve
+php artisan queue:work
+```
 
-4. **Generate the application key**:
-   ```bash
-   php artisan key:generate
-   ```
+#### WebSocket (Node.js - Express.js/Socket.IO)
+1. **Clone the repository**:
+```bash
+git clone https://github.com/mehdikidai/socket_io.git
+cd socket_io
+```
+2. **Install dependencies**:
+```bash
+npm install
+```
+3. **Start the server**:
+```bash
+npm run dev
+```
 
-5. **Run migrations and seed the database**:
-   ```bash
-   php artisan migrate --seed
-   ```
-
-6. **Run the development servers**:
-   - For Laravel:
-     ```bash
-     php artisan serve
-     ```
-   - For Vue.js:
-     ```bash
-     npm run dev
-     ```
+#### Frontend (Vue.js)
+1. **Clone the repository**:
+```bash
+git clone https://github.com/mehdikidai/short_frontend.git
+cd short_frontend
+```
+2. **Install dependencies**:
+```bash
+npm install
+```
+3. **Run the development server**:
+```bash
+npm run dev
+```
 
 ---
 
 ## User Guide
 
 ### Account Management
-- **Sign Up**: Create an account using an email address.
-- **Log In**: Access your account using your email and password.
-- **Reset Password**: Recover access using the password reset feature.
+- **Sign Up**: Register a new account using an email address and password.
+- **Log In**: Access your account securely.
+- **Reset Password**: Use the "Forgot Password" feature to recover access.
 
 ### Creating Shortened Links
-- Enter the original URL in the input field.
-- Optionally customize the link.
-- Set the link's visibility (public/private).
+1. Input the original URL into the form.
+2. Optionally customize the alias for your link.
+3. Set visibility preferences (e.g., public or private).
 
 ### Viewing Statistics
-- View details of link visits, such as:
-  - Country, city, and coordinates.
-  - Device type (mobile/desktop).
-  - Browser information.
-- Export statistics as needed.
+Gain insights into your shortened URLs:
+- View geographic details (country, city, and coordinates).
+- Analyze device usage (mobile, desktop, or tablet).
+- Check browser types.
 
 ### Generating QR Codes
-- Customize QR code colors.
-- Download the QR code as an image.
+1. Customize QR code colors to match your branding.
+2. Download the QR code as an image for sharing.
 
 ---
 
 ## Developer Guide
 
 ### Project Structure
-- **/app**: Contains backend logic (models, controllers).
-- **/resources**: Frontend assets (Vue.js components).
-- **/database**: Migrations and seeders.
-- **/routes**: API and web route definitions.
+
+- **Backend**:
+  - `/app`: Business logic (models, controllers).
+  - `/database`: Migrations and seeders for data management.
+  - `/routes`: API and web route definitions.
+- **Frontend**:
+  - `/src`: Vue.js components and utilities.
+  - `/assets`: Static files like images and styles.
 
 ### API Endpoints
-Provide detailed documentation for each endpoint, including:
-- **Authentication**: `/api/login`, `/api/register`.
-- **URL Management**: `/api/urls`, `/api/urls/{id}`.
-- **Statistics**: `/api/urls/{id}/stats`.
 
-### Service Setup
-- Configure **Google Maps API** for geolocation.
-- Add any other third-party integrations.
+**Authentication**:
+- `POST /api/login` – User login.
+- `POST /api/logout` – User logout.
+- `POST /api/register` – User registration.
+- `POST /api/password/reset` – Reset the user password.
+- `POST /api/password/send-reset-code` – Send a reset code to the user’s email.
+- `POST /api/email/verify` – Verify the user’s email address.
+- `GET|HEAD /sanctum/csrf-cookie` – Retrieve a CSRF token for secure requests.
 
----
+**User Management**:
+- `GET|HEAD /api/user` – Get details of the currently authenticated user.
+- `PUT /api/user` – Update user information.
+- `PUT /api/user/update-password` – Update the user’s password.
+- `DELETE /api/user/account` – Delete the currently authenticated user’s account.
+- `GET|HEAD /api/user/users` – Retrieve a list of all users (admin feature).
+- `DELETE /api/user/{id}` – Delete a specific user (admin feature).
+- `POST /api/upload_photo_profile` – Upload a profile photo.
 
-## Database Schema
-### Tables
-1. **users**: Manages user information.
-2. **urls**: Stores shortened URLs and associated data.
-3. **clicks**: Tracks click details, such as location and device type.
-4. **roles**: Defines user roles (e.g., admin, user).
-5. **role_user**: Links roles to users.
-6. **sessions**: Tracks active user sessions.
-7. **personal_access_tokens**: Handles API tokens.
+**URL Management**:
+- `GET|HEAD /api/urls/{sort?}` – Retrieve a list of URLs, optionally sorted.
+- `GET|HEAD /api/urls/{id}` – Get details of a specific shortened URL.
+- `POST /api/urls` – Create a new shortened URL.
+- `PUT /api/urls/{id}` – Update a shortened URL.
+- `PUT /api/urls/{id}/visual` – Update visual properties of a URL (e.g., metadata or appearance).
+- `DELETE /api/urls/{id}` – Delete a shortened URL.
+- `PATCH /api/restore_url/{id}` – Restore a previously deleted URL.
+- `DELETE /api/force_delete_url/{id}` – Permanently delete a URL.
 
-(Include diagrams or SQL examples as needed.)
+**Analytics**:
+- `GET|HEAD /api/analytics/{filter?}` – Retrieve analytics data based on optional filters.
+- `GET|HEAD /api/locations/{filter?}` – Get location-based analytics filtered by specified criteria.
+
+**Search and Filtering**:
+- `GET|HEAD /api/search` – Search URLs or related data.
+- `GET|HEAD /api/trash` – Retrieve a list of trashed URLs.
+
+**Testing and Utilities**:
+- `GET|HEAD /api/test` – Endpoint for testing purposes.
+- `GET|HEAD /up` – Check the health/status of the application.
+- `GET|HEAD /{code}` – Redirect using the shortened URL code.
+
+### Database Schema
+
+#### Tables
+
+1. **users**: Handles user information (e.g., name, email, password, profile photo).
+2. **urls**: Stores original and shortened URLs with metadata.
+3. **clicks**: Tracks link clicks with details like:
+   - IP address.
+   - Country, city, and coordinates.
+   - Browser and device type.
+4. **roles**: Defines user roles (admin, regular user).
+5. **role_user**: Links roles to users (many-to-many relationship).
+6. **sessions**: Tracks user session activity.
+7. **personal_access_tokens**: Manages API tokens for secure access.
 
 ---
 
 ## Maintenance
-- **Backup Database**: Regularly back up your database.
-- **Run Scheduled Tasks**:
-  ```bash
-  php artisan schedule:run
-  ```
+- **Clear Cache**:
+```bash
+php artisan cache:clear
+```
+- **Queue Management**:
+```bash
+php artisan queue:restart
+```
+- **Database Backups**: Use tools like `mysqldump` or Laravel backups.
 
 ---
 
 ## FAQ
-- **How can I edit a shortened link?**
-  Navigate to the link management section and click "Edit".
-- **What should I do if I encounter an error?**
-  Check the application logs or contact support.
-
----
-
-## Contributions
-Contributions are welcome! Follow these steps to contribute:
-1. Fork the repository.
-2. Create a feature branch:
-   ```bash
-   git checkout -b feature-name
-   ```
-3. Commit your changes and create a pull request.
-
----
+1. **How do I reset my password?**
+   - Use the "Forgot Password" option on the login page.
+2. **Can I customize QR codes?**
+   - Yes, you can select colors before generating the QR code.
+3. **What browsers are supported?**
+   - Modern browsers like Chrome, Firefox, Safari, and Edge.
+4. **What languages are supported?**
+   - The application supports Arabic, French, English, Spanish, and German.
