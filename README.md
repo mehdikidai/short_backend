@@ -16,7 +16,6 @@
 - [Tables](#tables)
 - [Maintenance](#maintenance)
 - [FAQ](#faq)
-- [Contributions](#contributions)
 
 ---
 ## Introduction
